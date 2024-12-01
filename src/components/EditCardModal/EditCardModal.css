@@ -1,0 +1,151 @@
+.overlay {
+    background: rgba(0, 0, 0, 0.6);
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+}
+.edit-card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 528px;
+    background-color: var(--grey-800);
+    padding: 24px;
+    margin: 0 auto;
+    z-index: 11;
+    border-radius: 10px;
+    color: var(--secondary-white);
+    border: none;
+}
+.edit-card__form {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 343px;
+    grid-template-rows: 1fr 40px 2fr 40px 1fr;
+    grid-template-areas: "edit edit"
+                         "title titleInput"
+                         "description descriptionInput"
+                         "priority priorityInput"
+                         "buttons buttons";
+    gap: 24px;
+    font-size: var(--md);
+}
+.edit-card__form-title {
+    grid-area: edit;
+    font-size: var(--xl);
+    font-weight: 700;
+    margin-bottom: 16px;
+}
+.input {
+    width: 100%;
+    height: 40px;
+    padding-left: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--grey-600);
+    background-color: var(--grey-700);
+    color: var(--secondary-white);
+}
+.title-label {
+    grid-area: title;
+}
+.title-input {
+    grid-area: titleInput;
+}
+.title-input::placeholder {
+    color: var(--grey-100);
+
+}
+.description-label {
+    grid-area: description;
+}
+.description-input {
+    grid-area: descriptionInput;
+    border: 1px solid var(--grey-600);
+    background-color: var(--grey-700);
+    color: var(--secondary-white);
+    resize: none;
+    padding: 5px;
+}
+.description-input::placeholder {
+    color: var(--grey-100);
+    font-family: "Open Sans", sans-serif;
+}
+.priority-label {
+    grid-area: priority;
+}
+.priority-input {
+    grid-area: priorityInput;
+    color: var(--secondary-white);
+}
+.priority-input option {
+    color: var(--secondary-white);
+}
+.edit-card__form-buttons {
+    grid-area: buttons;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 24px;
+}
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.button {
+    padding: 8px 32px;
+    cursor: pointer;
+    border-radius: 10px;
+    border: none;
+}
+.delete-button {
+    color: var(--red-200);
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0;
+}
+.delete-button__icon {
+    fill: var(--red-200);
+    width: 20px;
+    height: 20px;
+    padding: 0;
+}
+.delete-button:hover {
+    color: var(--red-100);
+}
+.delete-button:hover .delete-button__icon {
+    fill: var(--red-100);
+}
+.cancel-button {
+    background-color: transparent;
+    color: var(--secondary-white);
+    border: 1px solid var(--secondary-white);
+}
+.cancel-button:hover {
+    background-color: var(--grey-600);
+}
+.save-button {
+    background-color: var(--white);
+    color: var(--grey-800);
+    font-weight: 700;
+    border: 1px solid var(--white);
+}
+.save-button:hover {
+    background-color: var(--grey-600);
+    color: var(--white);
+    border: 1px solid var(--white);
+    transition: 0.3s;
+}

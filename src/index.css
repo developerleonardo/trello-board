@@ -1,0 +1,35 @@
+:root {
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --white: #FFFFFF; /* high contrast text and primary buttons */
+  --secondary-white: #F7F9F8; /* secondary text */
+  --grey-100: #ECEEED; /* tertiary text */
+  --grey-200: #434946; /* borders */
+  --grey-300: #3B3B3D; /* input background */
+  --grey-400: #28282A; /* Primary elements / card's background */
+  --grey-500: #252525; /* Secondary component / add card background */
+  --grey-600: #191919; /* column background */
+  --grey-700: #1F1F1F; /* Modal background */
+  --grey-800: #0F0F0F; /* Background */
+  --inactive-grey: #9f9f9f; /* Inactive text */
+  --red-100: #D88B8A; /* High contrast red */
+  --red-200: #E77174; /* destructive action */
+  --red-300: #DF4649; /* Alert */
+  --red-400: #CE2427; /* Primary confirmation button */
+  --dark-red: #552F2F; /* Secondary confirmation button */
+  --light-green: #94D287; /* High contrast text */
+  --dark-green: #375831; /* background */
+  --light-yellow: #E4E393; /* High contrast text */
+  --dark-yellow: #585830; /* background */
+  --sm: 14px;
+  --m: 16px;
+  --lg: 18px;
+  --xl: 20px;
+  --xl2: 24px;
+  --xxl: 36px;
+  --xxxl: 48px;
+}

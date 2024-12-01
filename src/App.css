@@ -1,0 +1,23 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+#root {
+  margin: 0 auto;
+  padding: 60px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+body {
+  background: var(--grey-800);
+  font-family: "Open Sans", sans-serif;
+}
+.title {
+  font-size: var(--xxxl);
+  color: var(--white);
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
