@@ -1,16 +1,41 @@
-import { ListType } from "../../types";
+import { Id, ListType } from "../../types";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import "./List.css";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+
 interface ListProps {
+  list: ListType;
+  deleteList: (id: Id) => void;
   children?: React.ReactNode;
-  title: ListType['title']
-  id: ListType['id']
-  deleteList: (id: ListType['id']) => void;
 }
-const List = ({ children, id, title, deleteList }: ListProps) => {
+const List: React.FC<ListProps> = ({list,deleteList, children}: ListProps) => {
+  const {id, title} = list;
+
+  const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
+    id: id,
+    data: {
+      type: "List",
+      list
+    }
+  })
+
+  if(isDragging) {
+    return <div ref={setNodeRef} style={{transform: CSS.Transform.toString(transform),
+      transition,}} className="list"></div>;
+  }
+
   return (
-    <div className="list">
+    <div 
+    ref={setNodeRef}
+    {...attributes}
+    {...listeners}
+    style={{
+      transform: CSS.Transform.toString(transform),
+      transition,
+    }}
+    className="list">
       <div className="add-list">
         <div className="add-list__actions">
           <input type="text" value={title} />
