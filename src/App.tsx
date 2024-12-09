@@ -44,6 +44,23 @@ function App(): JSX.Element {
     };
     setLists([...lists, newColumn]);
   };
+
+  const updateTitleList = (title: string, id: Id): void => {
+    setLists((lists) =>
+      lists.map((list) => {
+        if (list.id === id) {
+          return { ...list, title };
+        }
+        return list;
+      })
+    );
+  }
+
+  const deleteList = (id: Id): void => {
+    const filteredLists = lists.filter((list) => list.id !== id);
+    setLists(filteredLists);
+  };
+
   const onDragStart = (event: DragStartEvent) => {
     console.log(event.active.data);
     if (event.active.data.current?.type === "List") {
@@ -70,11 +87,6 @@ function App(): JSX.Element {
     });
   };
 
-  const deleteList = (id: Id): void => {
-    const filteredLists = lists.filter((list) => list.id !== id);
-    setLists(filteredLists);
-  };
-
   return (
     <>
       <DndContext
@@ -86,7 +98,7 @@ function App(): JSX.Element {
         <Layout>
           <SortableContext items={listsId}>
             {lists.map((list) => (
-              <List key={list.id} list={list} deleteList={deleteList} />
+              <List key={list.id} list={list} deleteList={deleteList} updateTitleList={updateTitleList} />
             ))}
           </SortableContext>
           <button className="add-list-button" onClick={() => createList()}>
@@ -98,7 +110,7 @@ function App(): JSX.Element {
         </Layout>
         {createPortal(
           <DragOverlay>
-            {activeList && <List list={activeList} deleteList={deleteList} />}
+            {activeList && <List list={activeList} deleteList={deleteList} updateTitleList={updateTitleList} />}
           </DragOverlay>,
           document.body
         )}

@@ -28,6 +28,7 @@
     border-radius: 10px;
     padding: 24px;
     color: var(--grey-100);
+    gap: 8px;
 }
 .add-list__actions input {
     font-size: var(--xl);
