@@ -10,4 +10,5 @@ export interface CardType {
 export interface ListType {
   id: Id;
   title: string;
+  cards?: Array<CardType>
 }

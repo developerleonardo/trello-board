@@ -5,14 +5,15 @@ import "./List.css";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useState } from "react";
+import { Card } from "../Card";
 
 interface ListProps {
   list: ListType;
   deleteList: (id: Id) => void;
   updateTitleList: (title: string, id: Id) => void;
-  children?: React.ReactNode;
+  addCards: (card: ListType) => void;
 }
-const List: React.FC<ListProps> = ({list, deleteList, updateTitleList, children}: ListProps) => {
+const List: React.FC<ListProps> = ({list, deleteList, updateTitleList, addCards}: ListProps) => {
   const {id, title} = list;
   const [editMode, setEditMode] = useState<boolean>(false);
   
@@ -52,10 +53,14 @@ const List: React.FC<ListProps> = ({list, deleteList, updateTitleList, children}
             <RxDragHandleDots2 className="add-list__icon add-list__icon--drag" />
           </span>
         </div>
-        <button className="add-list__button">Add a new card</button>
+        <button className="add-list__button" onClick={() => addCards(list)}>Add a new card</button>
       </div>
       <div className="cards-container">
-        {children}
+        {
+          list.cards?.map((card) => (
+            <Card key={card.id} card={card} />
+          ))
+        }
       </div>
     </div>
   );

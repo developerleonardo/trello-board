@@ -16,7 +16,7 @@ import { List } from "./components/List";
 import { Layout } from "./components/Layout";
 import { EditCardModal } from "./components/EditCardModal";
 import { ConfirmationModal } from "./components/ConfirmationModal";
-import { ListType, Id } from "./types";
+import { ListType, Id, CardType } from "./types";
 import "./App.css";
 
 interface AppStateProps {
@@ -28,6 +28,9 @@ function App(): JSX.Element {
   const [activeList, setActiveList] = useState<ListType | null>(null);
 
   const listsId = useMemo(() => lists.map((list) => list.id), [lists]);
+
+  console.log(listsId);
+  
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -41,6 +44,7 @@ function App(): JSX.Element {
     const newColumn: ListType = {
       id: uuid(),
       title: `List ${lists.length + 1}`,
+      cards: [],
     };
     setLists([...lists, newColumn]);
   };
@@ -61,8 +65,25 @@ function App(): JSX.Element {
     setLists(filteredLists);
   };
 
+  const addCards = (card: ListType): void => {
+    const arrayOfCards = card.cards
+    const cardToAdd: CardType = {
+      id: uuid(),
+      title: "Cad's title",
+      description: 'This is a description preview. For more details go to edit mode',
+      priority: 'Low',
+    }
+    arrayOfCards!.push(cardToAdd)
+    setLists((lists) => lists.map((list) => {
+      const copyList = { ...list };
+      if (copyList.id === card.id) {
+        return { ...list, cards: arrayOfCards };
+      }
+      return list;
+    }));
+  }
+
   const onDragStart = (event: DragStartEvent) => {
-    console.log(event.active.data);
     if (event.active.data.current?.type === "List") {
       setActiveList(event.active.data.current.list);
       return;
@@ -98,7 +119,7 @@ function App(): JSX.Element {
         <Layout>
           <SortableContext items={listsId}>
             {lists.map((list) => (
-              <List key={list.id} list={list} deleteList={deleteList} updateTitleList={updateTitleList} />
+              <List key={list.id} list={list} deleteList={deleteList} updateTitleList={updateTitleList} addCards={addCards} />
             ))}
           </SortableContext>
           <button className="add-list-button" onClick={() => createList()}>
@@ -110,7 +131,7 @@ function App(): JSX.Element {
         </Layout>
         {createPortal(
           <DragOverlay>
-            {activeList && <List list={activeList} deleteList={deleteList} updateTitleList={updateTitleList} />}
+            {activeList && <List list={activeList} deleteList={deleteList} updateTitleList={updateTitleList} addCards={addCards} />}
           </DragOverlay>,
           document.body
         )}
