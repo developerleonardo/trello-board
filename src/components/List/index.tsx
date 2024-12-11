@@ -1,20 +1,19 @@
-import { Id, ListType } from "../../types";
+import { ListType } from "../../types";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import "./List.css";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Card } from "../Card";
+import { TrelloBoardContext } from "../../Context";
 
 interface ListProps {
   list: ListType;
-  deleteList: (id: Id) => void;
-  updateTitleList: (title: string, id: Id) => void;
-  addCards: (card: ListType) => void;
 }
-const List: React.FC<ListProps> = ({list, deleteList, updateTitleList, addCards}: ListProps) => {
+const List: React.FC<ListProps> = ({list}: ListProps) => {
   const {id, title} = list;
+  const {deleteList, updateTitleList, addCards} = useContext(TrelloBoardContext)
   const [editMode, setEditMode] = useState<boolean>(false);
   
   const {attributes, listeners, setNodeRef, transform, transition, isDragging} = useSortable({
