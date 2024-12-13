@@ -10,13 +10,13 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({card}: CardProps) => {
   const {title, description, priority} = card;
-  const {editCard} = useContext(TrelloBoardContext)
+  const {sendCardToEdit} = useContext(TrelloBoardContext)
 
   return (
     <div className='card'>
       <div className="card-header">
         <h2 className="card-title">{title}</h2>
-        <MdEdit className="card-icon" onClick={() => editCard()} />
+        <MdEdit className="card-icon" onClick={() => sendCardToEdit(card)} />
       </div>
       <p className="card-paragraph">{description}</p>
       <span className="card-priority">

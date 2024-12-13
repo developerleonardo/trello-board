@@ -9,7 +9,10 @@ interface TrelloBoardContextProps {
     updateTitleList: (title: string, id: Id) => void;
     deleteList: (id: Id) => void;
     addCards: (card: ListType) => void;
-    editCard: () => void;
+    editCard: (card: CardType) => void;
+    cardToEdit: CardType | null;
+    setCardToEdit: Dispatch<SetStateAction<CardType | null>>;
+    sendCardToEdit: (card: CardType) => void;
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
@@ -20,11 +23,15 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
     deleteList: () => {},
     addCards: () => {},
     editCard: () => {},
+    cardToEdit: null,
+    setCardToEdit: () => {},
+    sendCardToEdit: () => {},
 });
 
 
 export const TrelloBoardProvider = ({children}: PropsWithChildren) => {
     const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
+      const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
 
     // Function to create a new list
     const createList = (): void => {
@@ -72,10 +79,24 @@ export const TrelloBoardProvider = ({children}: PropsWithChildren) => {
         );
     }
 
+    //function to send a card to edit
+    const sendCardToEdit = (card: CardType) => {
+        setCardToEdit(card);
+    }
+
     // Function to edit a card
-    const editCard = () => {
-        console.log('Edit card');
-        
+    const editCard = (cardToEdit: CardType): void => {
+        setLists((lists) =>
+            lists.map((list) => {
+                const updatedCards = list.cards?.map((card) => {
+                    if (card.id === cardToEdit.id) {
+                        return cardToEdit; // Update the card if the ID matches
+                    }
+                    return card; // Return the card unchanged if the ID does not match
+                });
+                return { ...list, cards: updatedCards }; // Update the list with the updated cards
+            })
+        );
     }
 
     return (
@@ -86,7 +107,10 @@ export const TrelloBoardProvider = ({children}: PropsWithChildren) => {
             updateTitleList,
             deleteList,
             addCards,
-            editCard
+            editCard,
+            cardToEdit,
+            setCardToEdit,
+            sendCardToEdit,
         }}>
             {children}
         </TrelloBoardContext.Provider>
