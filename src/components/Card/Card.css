@@ -40,8 +40,18 @@
     font-size: var(--sm);
     padding: 1px 12px;
     font-weight: 400;
-    color: var(--red-100);
-    background-color: var(--dark-red);
     border-radius: 10px;
     width: fit-content;
+}
+.card-priority--high {
+    color: var(--red-100);
+    background-color: var(--dark-red);
+}
+.card-priority--medium {
+    color: var(--light-yellow);
+    background-color: var(--dark-yellow);
+}
+.card-priority--low {
+    color: var(--light-green);
+    background-color: var(--dark-green);
 }

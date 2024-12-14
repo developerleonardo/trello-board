@@ -13,7 +13,6 @@ import {
 import { List } from "./components/List";
 import { Layout } from "./components/Layout";
 import { EditCardModal } from "./components/EditCardModal";
-import { ConfirmationModal } from "./components/ConfirmationModal";
 import { ListType } from "./types";
 import "./App.css";
 import { TrelloBoardContext } from "./Context";
@@ -77,7 +76,6 @@ function App(): JSX.Element {
               <span className="add-list-button__text">Add List</span>
             </button>
             <EditCardModal />
-            <ConfirmationModal />
           </Layout>
           {createPortal(
             <DragOverlay>

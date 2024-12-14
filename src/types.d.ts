@@ -1,10 +1,11 @@
 type Id = number | string;
+type Priority = 'Low' | 'Medium' | 'High';
 
 export interface CardType {
   id: Id;
   title: string;
   description: string;
-  priority: 'Low' | 'Medium' | 'High';
+  priority: Priority;
 }
 
 export interface ListType {

@@ -5,7 +5,7 @@ import { TrelloBoardContext } from "../../Context";
 import { CardType } from "../../types";
 
 const EditCardModal = (): JSX.Element => {
-  const { cardToEdit, editCard, setCardToEdit } = useContext(TrelloBoardContext);
+  const { cardToEdit, editCard, setCardToEdit, deleteCard } = useContext(TrelloBoardContext);
   const [inputValues, setInputValues] = useState<CardType>({
     id: "",
     title: "",
@@ -34,6 +34,10 @@ const EditCardModal = (): JSX.Element => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     editCard(inputValues)
+    setCardToEdit(null)
+  }
+
+  const closeDialog = () => {
     setCardToEdit(null)
   }
 
@@ -84,10 +88,10 @@ const EditCardModal = (): JSX.Element => {
               <div className="edit-card__form-buttons">
                 <button className="button delete-button">
                   <FaRegTrashAlt className="delete-button__icon" />
-                  <span>Delete</span>
+                  <span onClick={() => deleteCard(cardToEdit.id)}>Delete</span>
                 </button>
                 <div className="buttons">
-                  <button className="button cancel-button">Cancel</button>
+                  <button className="button cancel-button" onClick={closeDialog}>Cancel</button>
                   <button type="submit" className="button save-button">
                     Save
                   </button>
