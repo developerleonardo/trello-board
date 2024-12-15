@@ -2,9 +2,9 @@ import { ListType } from "../../types";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import "./List.css";
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Card } from "../Card";
 import { TrelloBoardContext } from "../../Context";
 import { ConfirmationModal } from "../ConfirmationModal";
@@ -17,6 +17,8 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
   const { updateTitleList, addCards, checkDeleteListValidity } =
     useContext(TrelloBoardContext);
   const [editMode, setEditMode] = useState<boolean>(false);
+
+  const tasksIds = useMemo(() => list.cards!.map((card) => card.id), [list.cards]);
 
   const {
     attributes,
@@ -85,9 +87,11 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
           </button>
         </div>
         <div className="cards-container">
-          {list.cards?.map((card) => (
-            <Card key={card.id} card={card} />
-          ))}
+          <SortableContext items={tasksIds}>
+            {list.cards?.map((card) => (
+              <Card key={card.id} card={card} />
+            ))}
+          </SortableContext>
         </div>
       </div>
       <ConfirmationModal id={id} />

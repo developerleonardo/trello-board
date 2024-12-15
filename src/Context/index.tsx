@@ -99,7 +99,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       id: uuid(), // Generate a unique ID for the new card
       title: "Card's title", // Set a default title for the new card
       description:
-        "This is a description preview. For more details go to edit mode", // Set a default description
+        "This is a description preview. To edit this card, please click on the icon in the right top", // Set a default description
       priority: "Low", // Set a default priority
     };
     setLists((lists) =>

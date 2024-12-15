@@ -8,6 +8,16 @@
     padding: 24px;
     color: var(--secondary-white);
 }
+.card--empty {
+    width: 100%;
+    height: 192px;
+    background-color: var(--grey-400);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    color: var(--secondary-white);
+}
 .card:hover .card-icon {
     fill: var(--secondary-white);
 }
