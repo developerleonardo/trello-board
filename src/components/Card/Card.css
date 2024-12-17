@@ -7,6 +7,7 @@
     flex-direction: column;
     padding: 24px;
     color: var(--secondary-white);
+    cursor: pointer;
 }
 .card--empty {
     width: 100%;
@@ -18,9 +19,6 @@
     padding: 24px;
     color: var(--secondary-white);
 }
-.card:hover .card-icon {
-    fill: var(--secondary-white);
-}
 .card-header {
     display: flex;
     justify-content: space-between;
@@ -31,19 +29,25 @@
     font-size: var(--xl2);
     font-weight: 700;
 }
+.card-edit-button {
+border: none;
+background-color: transparent;
+padding: 0;
+margin: 0;
+cursor: pointer;
+}
 .card-icon {
     width: 24px;
     height: 24px;
-    fill: var(--grey-200);
-}
-.card-icon:hover {
-    cursor: pointer;
+    fill: var(--secondary-white);
 }
 .card-paragraph {
     font-size: var(--sm);
     font-weight: 400;
     line-height: 1.5;
     margin-bottom: 24px;
+    overflow-wrap: break-word;
+    min-height: 42px;
 }
 .card-priority {
     display: inline-block;

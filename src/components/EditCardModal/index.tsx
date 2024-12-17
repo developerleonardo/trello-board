@@ -59,6 +59,7 @@ const EditCardModal = (): JSX.Element => {
                 placeholder="Update the card's title"
                 value={inputValues.title}
                 onChange={handleChange}
+                required
               />
               <label htmlFor="description" className="description-label">
                 Description

@@ -75,10 +75,12 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
               }}
             />
             <span className="add-list__icons">
-              <FaRegTrashAlt
-                className="add-list__icon add-list__icon--delete"
-                onClick={() => checkDeleteListValidity(id)}
-              />
+              <button className="add-list__button--delete">
+                <FaRegTrashAlt
+                  className="add-list__icon add-list__icon--delete"
+                  onClick={() => checkDeleteListValidity(id)}
+                />
+              </button>
               <RxDragHandleDots2 className="add-list__icon add-list__icon--drag" />
             </span>
           </div>
