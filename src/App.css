@@ -3,11 +3,14 @@
   margin: 0;
   padding: 0;
 }
+html, body {
+  min-height: 100%;
+}
 @font-face {
-  font-family: 'Cal Sans';
-  src: url('./assets/fonts/CalSans/CalSans-SemiBold.woff2') format('woff2'),
-       url('./assets/fonts/CalSans/CalSans-SemiBold.woff') format('woff'),
-       url('./assets/fonts/CalSans/CalSans-SemiBold.ttf') format('truetype');
+  font-family: "Cal Sans";
+  src: url("./assets/fonts/CalSans/CalSans-SemiBold.woff2") format("woff2"),
+    url("./assets/fonts/CalSans/CalSans-SemiBold.woff") format("woff"),
+    url("./assets/fonts/CalSans/CalSans-SemiBold.ttf") format("truetype");
   font-weight: 600; /* SemiBold weight */
   font-style: normal;
 }
@@ -20,19 +23,34 @@
   align-items: center;
   min-width: 100%;
   width: fit-content;
-  height: 100vh;
+  min-height: 100vh;
 }
 body {
   background: var(--grey-800);
   font-family: "Open Sans", sans-serif;
   min-width: 100%;
   width: fit-content;
-  height: 100vh;
+  min-height: 100vh;
+}
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #25252555 25%, transparent 25%) -10px 0/20px
+      20px,
+    linear-gradient(225deg, #252525 25%, transparent 25%) -10px 0/20px 20px,
+    linear-gradient(315deg, #25252555 25%, transparent 25%) 0px 0/20px 20px,
+    linear-gradient(45deg, #252525 25%, #0f0f0f 25%) 0px 0/20px 20px;
+  opacity: 0.1;
+  z-index: -1;
 }
 .title {
-  font-size: var(--xxl);
+  font-size: var(--xxxl);
   color: var(--white);
-  font-family: 'Cal Sans', sans-serif;
+  font-family: "Cal Sans", sans-serif;
   font-weight: 700;
   letter-spacing: 0.05em;
 }
@@ -52,7 +70,7 @@ body {
   border: none;
 }
 .add-list-button:hover {
-  background-color: var(--grey-400)
+  background-color: var(--grey-400);
 }
 .add-list-button__plus {
   width: 24px;
