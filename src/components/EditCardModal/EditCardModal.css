@@ -21,9 +21,19 @@
     border-radius: 10px;
     color: var(--secondary-white);
     border: none;
+    position: relative;
 }
-.edit-card::backdrop {
-    background: rgba(0, 0, 0, 0.6);
+.edit-card__close-mark {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    fill: var(--grey-100);
+}
+.edit-card__close-mark:hover {
+    fill: var(--white);
 }
 .edit-card__form {
     width: 100%;
@@ -49,10 +59,11 @@
     width: 100%;
     height: 40px;
     padding-left: 5px;
-    border-radius: 5px;
+    border-radius: 3px;
     border: 1px solid var(--grey-600);
     background-color: var(--grey-700);
     color: var(--secondary-white);
+    font-family: "Open Sans", sans-serif;
 }
 .title-label {
     grid-area: title;
@@ -74,6 +85,8 @@
     color: var(--secondary-white);
     resize: none;
     padding: 5px;
+    font-family: "Open Sans", sans-serif;
+    border-radius: 3px;
 }
 .description-input::placeholder {
     color: var(--grey-100);
@@ -85,6 +98,7 @@
 .priority-input {
     grid-area: priorityInput;
     color: var(--secondary-white);
+    font-family: "Open Sans", sans-serif;
 }
 .priority-input option {
     color: var(--secondary-white);
@@ -105,7 +119,7 @@
 .button {
     padding: 8px 32px;
     cursor: pointer;
-    border-radius: 10px;
+    border-radius: 6px;
     border: none;
 }
 .delete-button {
@@ -121,8 +135,8 @@
 }
 .delete-button__icon {
     fill: var(--red-200);
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     padding: 0;
 }
 .delete-button:hover {
@@ -134,7 +148,7 @@
 .cancel-button {
     background-color: transparent;
     color: var(--secondary-white);
-    border: 1px solid var(--secondary-white);
+    border: 1px solid var(--grey-200);
 }
 .cancel-button:hover {
     background-color: var(--grey-600);
@@ -148,6 +162,6 @@
 .save-button:hover {
     background-color: var(--grey-600);
     color: var(--white);
-    border: 1px solid var(--white);
+    border: 1px solid var(--grey-200);
     transition: 0.3s;
 }

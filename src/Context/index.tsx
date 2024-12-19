@@ -24,6 +24,8 @@ interface TrelloBoardContextProps {
   setIsConfirmationModalOpen: Dispatch<SetStateAction<boolean>>;
   checkDeleteListValidity: (id: Id) => void;
   closeConfirmationModal: () => void;
+  isCardEdited: boolean;
+  setIsCardEdited: Dispatch<SetStateAction<boolean>>;
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
@@ -42,12 +44,15 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   setIsConfirmationModalOpen: () => {},
   checkDeleteListValidity: () => {},
   closeConfirmationModal: () => {},
+  isCardEdited: false,
+  setIsCardEdited: () => {},
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [isCardEdited, setIsCardEdited] = useState(false)
 
   // Function to create a new list
   const createList = (): void => {
@@ -114,6 +119,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   //function to send a card to edit
   const sendCardToEdit = (card: CardType) => {
+    setIsCardEdited(false);
     setCardToEdit(card);
   };
 
@@ -160,6 +166,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setIsConfirmationModalOpen,
         checkDeleteListValidity,
         closeConfirmationModal,
+        isCardEdited,
+        setIsCardEdited,
       }}
     >
       {children}

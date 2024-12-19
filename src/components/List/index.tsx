@@ -67,6 +67,7 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
             <input
               type="text"
               value={title}
+              maxLength={50}
               onChange={onTitleChange}
               onFocus={() => setEditMode(true)}
               onBlur={() => setEditMode(false)}

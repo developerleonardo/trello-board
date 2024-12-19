@@ -36,15 +36,16 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    opacity: 0;
 }
 .illustration-1 {
-    animation: state-illustration 2s 0.5s ease-in-out;
+    animation: state-illustration 2s 0.5s ease-in-out forwards;
 }
 .illustration-2 {
-    animation: state-illustration 2s 0.8s ease-in-out;
+    animation: state-illustration 2s 0.8s ease-in-out forwards;
 }
 .illustration-3 {
-    animation: state-illustration 2s 1.1s ease-in-out;
+    animation: state-illustration 2s 1.1s ease-in-out forwards;
 }
 @keyframes state-illustration {
     0% {

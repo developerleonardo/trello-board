@@ -1,11 +1,15 @@
-import { FaRegTrashAlt } from "react-icons/fa";
-import "./EditCardModal.css";
 import { useContext, useEffect, useState } from "react";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoIosClose } from "react-icons/io";
 import { TrelloBoardContext } from "../../Context";
 import { CardType } from "../../types";
+import "./EditCardModal.css";
+
+// Cambiar el estado a false al darle click al boton de editar o al boton de eliminar
+// Modificar el closeModal para que se ejecute adecuadamente
 
 const EditCardModal = (): JSX.Element => {
-  const { cardToEdit, editCard, setCardToEdit, deleteCard } = useContext(TrelloBoardContext);
+  const { cardToEdit, editCard, setCardToEdit, deleteCard, isCardEdited, setIsCardEdited } = useContext(TrelloBoardContext);
   const [inputValues, setInputValues] = useState<CardType>({
     id: "",
     title: "",
@@ -25,6 +29,7 @@ const EditCardModal = (): JSX.Element => {
   }, [cardToEdit])
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    setIsCardEdited(true)
     setInputValues({
       ...inputValues,
       [event.target.name]: event.target.value
@@ -41,11 +46,19 @@ const EditCardModal = (): JSX.Element => {
     setCardToEdit(null)
   }
 
+  const customCloseDialog = () => {
+    if(!isCardEdited) {
+      closeDialog()
+    }
+    return
+  }
+
   return (
     <>
       {!!cardToEdit && (
-        <div className="overlay">
-          <dialog className="edit-card" open={!!cardToEdit}>
+        <div className="overlay" onClick={customCloseDialog}>
+          <dialog className="edit-card" open={!!cardToEdit} onClick={(event) => event.stopPropagation()}>
+          <IoIosClose className="edit-card__close-mark" onClick={closeDialog} />
             <form method="dialog" className="edit-card__form" onSubmit={handleSubmit}>
               <h2 className="edit-card__form-title">Edit Card</h2>
               <label htmlFor="title" className="title-label">

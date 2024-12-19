@@ -15,7 +15,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({id}: ConfirmationM
   return (
     <>
       {isConfirmationModalOpen &&
-        <div className='overlay'>
+        <div className='overlay' onClick={closeConfirmationModal}>
           <dialog className='confirmation-modal'>
             <span className="confirmation-modal_alert-outer">
               <span className='confirmation-modal_alert-inner'>

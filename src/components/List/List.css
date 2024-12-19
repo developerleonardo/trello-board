@@ -36,6 +36,7 @@
     color: var(--grey-100);
     background-color: transparent;
     border: 0;
+    text-overflow: ellipsis;
 }
 .add-list__icons {
     display: flex;
