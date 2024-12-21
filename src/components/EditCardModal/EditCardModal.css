@@ -25,12 +25,12 @@
 }
 .edit-card__close-mark {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 24px;
+    right: 24px;
     width: 32px;
     height: 32px;
     cursor: pointer;
-    fill: var(--grey-100);
+    fill: var(--grey-200);
 }
 .edit-card__close-mark:hover {
     fill: var(--white);
@@ -124,14 +124,13 @@
 }
 .delete-button {
     color: var(--red-200);
-    background-color: transparent;
+    background-color: #1a1a1a;
     border: none;
     border-radius: 5px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 0;
 }
 .delete-button__icon {
     fill: var(--red-200);
@@ -140,6 +139,7 @@
     padding: 0;
 }
 .delete-button:hover {
+    background-color: #2a2a2a;
     color: var(--red-100);
 }
 .delete-button:hover .delete-button__icon {

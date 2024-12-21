@@ -8,47 +8,52 @@ const EmptyState = () => {
 
   return (
     <div className="empty-state">
+      <div className="empty-state__illustration-container">
+        <div className="empty-state__illustration illustration-1">
+          <div className="illustration__content">
+            <span className="illustration__content__header"></span>
+            <div className="illustration__content__buttons">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <span className="empty-state__illustration__footer"></span>
+        </div>
+        <div className="empty-state__illustration illustration-2">
+          <div className="illustration__content">
+            <span className="illustration__content__header"></span>
+            <div className="illustration__content__buttons">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <span className="empty-state__illustration__footer"></span>
+        </div>
+        <div className="empty-state__illustration illustration-3">
+          <div className="illustration__content">
+            <span className="illustration__content__header"></span>
+            <div className="illustration__content__buttons">
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+          <span className="empty-state__illustration__footer"></span>
+        </div>
+      </div>
       <h2 className="empty-state__title">Start by adding a list</h2>
       <p className="empty-state__description">
         Create your first list to organize tasks, ideas, or projects. Click the
         button below to get started and bring your board to life!
       </p>
-      <button className="add-list-button add-list-button--empty-state" onClick={() => createList()}>
+      <button
+        className="add-list-button add-list-button--empty-state"
+        onClick={() => createList()}
+      >
         <span className="add-list-button__plus">
           <FaPlus />
         </span>
         <span className="add-list-button__text">Add List</span>
       </button>
-      <div className="empty-state__illustration illustration-1">
-        <div className="illustration__content">
-          <span className="illustration__content__header"></span>
-          <div className="illustration__content__buttons">
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        <span className="empty-state__illustration__footer"></span>
-      </div>
-      <div className="empty-state__illustration illustration-2">
-        <div className="illustration__content">
-          <span className="illustration__content__header"></span>
-          <div className="illustration__content__buttons">
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        <span className="empty-state__illustration__footer"></span>
-      </div>
-      <div className="empty-state__illustration illustration-3">
-        <div className="illustration__content">
-          <span className="illustration__content__header"></span>
-          <div className="illustration__content__buttons">
-            <span></span>
-            <span></span>
-          </div>
-        </div>
-        <span className="empty-state__illustration__footer"></span>
-      </div>
     </div>
   );
 };

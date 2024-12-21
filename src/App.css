@@ -48,7 +48,7 @@ body::before {
   z-index: -1;
 }
 .title {
-  font-size: var(--xxxl);
+  font-size: var(--xxl);
   color: var(--white);
   font-family: "Cal Sans", sans-serif;
   font-weight: 700;
