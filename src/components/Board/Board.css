@@ -1,0 +1,36 @@
+.board {
+  min-width: 100%;
+  width: fit-content;
+}
+.title {
+    font-size: var(--xxl);
+    color: var(--white);
+    font-family: "Cal Sans", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-align: center;
+  }
+  .add-list-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 350px;
+    height: 63px;
+    background-color: var(--grey-700);
+    color: var(--grey-100);
+    font-size: var(--xl);
+    font-weight: 400;
+    cursor: pointer;
+    border-radius: 10px;
+    gap: 12px;
+    border: none;
+  }
+  .add-list-button:hover {
+    background-color: var(--grey-400);
+  }
+  .add-list-button__plus {
+    width: 24px;
+    height: 24px;
+    display: grid;
+    place-items: center;
+  }

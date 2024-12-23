@@ -5,15 +5,19 @@ import {
   Dispatch,
   SetStateAction,
 } from "react";
-import { CardType, Id, ListType } from "../types";
+import { BoardType, CardType, Id, ListType } from "../types";
 import { v4 as uuid } from "uuid";
 
 interface TrelloBoardContextProps {
+  kanbanBoards: Array<BoardType>;
+  setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
   lists: Array<ListType>;
   setLists: Dispatch<SetStateAction<Array<ListType>>>;
-  createList: () => void;
+  createList: (id: Id) => void;
   updateTitleList: (title: string, id: Id) => void;
   deleteList: (id: Id) => void;
+  targetListId: Id | null;
+  openConfirmationModal: (id: Id) => void;
   addCards: (card: ListType) => void;
   editCard: (card: CardType) => void;
   cardToEdit: CardType | null;
@@ -22,18 +26,22 @@ interface TrelloBoardContextProps {
   deleteCard: (cardId: Id) => void;
   isConfirmationModalOpen: boolean;
   setIsConfirmationModalOpen: Dispatch<SetStateAction<boolean>>;
-  checkDeleteListValidity: (id: Id) => void;
   closeConfirmationModal: () => void;
   isCardEdited: boolean;
   setIsCardEdited: Dispatch<SetStateAction<boolean>>;
+  selectedBoard: BoardType;
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
+  kanbanBoards: [],
+  setKanbanBoards: () => {},
   lists: [],
   setLists: () => {},
   createList: () => {},
   updateTitleList: () => {},
   deleteList: () => {},
+  targetListId: null,
+  openConfirmationModal: () => {},
   addCards: () => {},
   editCard: () => {},
   cardToEdit: null,
@@ -42,21 +50,31 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   deleteCard: () => {},
   isConfirmationModalOpen: false,
   setIsConfirmationModalOpen: () => {},
-  checkDeleteListValidity: () => {},
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
+  selectedBoard: { id: "", title: "", lists: [] },
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
+  const [kanbanBoards, setKanbanBoards] = useState<TrelloBoardContextProps["kanbanBoards"]>([
+    {
+      id: uuid(),
+      title: "TRELLO BOARD",
+      lists: [],
+    },
+  ]);
+ 
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
-    const [isCardEdited, setIsCardEdited] = useState(false)
+  const [targetListId, setTargetListId] = useState<Id | null>(null);
+  const [isCardEdited, setIsCardEdited] = useState(false);
 
   // Function to create a new list
-  const createList = (): void => {
+  const createList = (boardId: Id): void => {
     const newColumn: ListType = {
+      boardId: boardId,
       id: uuid(), // Generate a unique ID for the new list
       title: `List ${lists.length + 1}`, // Set the title of the new list
       cards: [], // Initialize with an empty array of cards
@@ -78,23 +96,22 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   // Function to delete a list
   const deleteList = (id: Id): void => {
-    const filteredLists = lists.filter((list) => list.id !== id); // Filter out the list with the matching ID
-    setLists(filteredLists); // Update the state with the filtered lists
-    setIsConfirmationModalOpen(false); // Close the confirmation modal
+    setLists((prevLists) => {
+      const updatedLists = prevLists.filter((list) => list.id !== id);
+      return updatedLists;
+    });
+    setIsConfirmationModalOpen(false);
   };
 
-  // Confirm delete list
-  const checkDeleteListValidity = (id: Id): void => {
-    const list = lists.find((list) => list.id === id);
-    if (list && list.cards && list.cards.length > 0) {
-      setIsConfirmationModalOpen(true);
-    } else {
-      deleteList(id);
-    }
+  // Function to open confirmation modal
+  const openConfirmationModal = (id: Id): void => {
+    setTargetListId(id);
+    setIsConfirmationModalOpen(true);
   };
 
   // Close confirmation modal
   const closeConfirmationModal = (): void => {
+    setTargetListId(null);
     setIsConfirmationModalOpen(false);
   };
 
@@ -147,15 +164,20 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     );
     setCardToEdit(null);
   };
+  const selectedBoard = kanbanBoards[0];
 
   return (
     <TrelloBoardContext.Provider
       value={{
+        kanbanBoards,
+        setKanbanBoards,
         lists,
         setLists,
         createList,
         updateTitleList,
         deleteList,
+        targetListId,
+        openConfirmationModal,
         addCards,
         editCard,
         cardToEdit,
@@ -164,10 +186,10 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         deleteCard,
         isConfirmationModalOpen,
         setIsConfirmationModalOpen,
-        checkDeleteListValidity,
         closeConfirmationModal,
         isCardEdited,
         setIsCardEdited,
+        selectedBoard,
       }}
     >
       {children}

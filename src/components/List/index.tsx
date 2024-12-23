@@ -1,4 +1,4 @@
-import { ListType } from "../../types";
+import { Id, ListType } from "../../types";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RxDragHandleDots2 } from "react-icons/rx";
 import "./List.css";
@@ -14,7 +14,7 @@ interface ListProps {
 }
 const List: React.FC<ListProps> = ({ list }: ListProps) => {
   const { id, title } = list;
-  const { updateTitleList, addCards, checkDeleteListValidity } =
+  const { updateTitleList, addCards, deleteList, openConfirmationModal } =
     useContext(TrelloBoardContext);
   const [editMode, setEditMode] = useState<boolean>(false);
 
@@ -50,6 +50,15 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
     updateTitleList(event.target.value, id);
   };
 
+  // Confirm delete list
+  const checkDeleteListValidity = (id: Id, list: ListType): void => {
+    if(list.cards?.length) {
+      openConfirmationModal(id);
+    } else {
+      deleteList(id);
+    }
+  };
+
   return (
     <>
       <div
@@ -79,7 +88,9 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
               <button className="add-list__button--delete">
                 <FaRegTrashAlt
                   className="add-list__icon add-list__icon--delete"
-                  onClick={() => checkDeleteListValidity(id)}
+                  onClick={() => {
+                    checkDeleteListValidity(id, list);
+                  } }
                 />
               </button>
               <RxDragHandleDots2 className="add-list__icon add-list__icon--drag" />
@@ -97,7 +108,7 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
           </SortableContext>
         </div>
       </div>
-      <ConfirmationModal id={id} />
+      <ConfirmationModal />
     </>
   );
 };

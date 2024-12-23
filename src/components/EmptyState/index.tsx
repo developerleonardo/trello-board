@@ -2,9 +2,16 @@ import { FaPlus } from "react-icons/fa6";
 import { useContext } from "react";
 import { TrelloBoardContext } from "../../Context";
 import "./EmptyState.css";
+import { BoardType } from "../../types";
 
-const EmptyState = () => {
+interface EmptyStateProps {
+  selectedBoard: BoardType;
+}
+
+const EmptyState: React.FC<EmptyStateProps> = ({selectedBoard}: EmptyStateProps) => {
   const { createList } = useContext(TrelloBoardContext);
+
+  const {id} = selectedBoard;
 
   return (
     <div className="empty-state">
@@ -46,8 +53,8 @@ const EmptyState = () => {
         button below to get started and bring your board to life!
       </p>
       <button
-        className="add-list-button add-list-button--empty-state"
-        onClick={() => createList()}
+        className="add-list-button--empty-state"
+        onClick={() => createList(id)}
       >
         <span className="add-list-button__plus">
           <FaPlus />

@@ -2,21 +2,16 @@ import { IoAlertCircleOutline } from "react-icons/io5";
 import './ConfirmationModal.css'
 import { useContext } from "react";
 import { TrelloBoardContext } from "../../Context";
-import { Id } from "../../types";
 
-interface ConfirmationModalProps {
-  id: Id;
-}
+const ConfirmationModal = (): JSX.Element => {
 
-const ConfirmationModal: React.FC<ConfirmationModalProps> = ({id}: ConfirmationModalProps) => {
-
-  const { isConfirmationModalOpen, deleteList, closeConfirmationModal } = useContext(TrelloBoardContext);
+  const { isConfirmationModalOpen, deleteList, closeConfirmationModal, targetListId } = useContext(TrelloBoardContext);
 
   return (
     <>
       {isConfirmationModalOpen &&
         <div className='overlay' onClick={closeConfirmationModal}>
-          <dialog className='confirmation-modal'>
+          <dialog className='confirmation-modal' onClick={(event) => event.stopPropagation()}>
             <span className="confirmation-modal_alert-outer">
               <span className='confirmation-modal_alert-inner'>
                 <IoAlertCircleOutline className='confirmation-modal_alert-icon' />
@@ -26,7 +21,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({id}: ConfirmationM
             <p className="confirmation-modal__paragraph">This list has at least one card. Do you want to delete it?</p>
             <div className='confirmation-modal__buttons'>
               <button className='button cancel-button' onClick={closeConfirmationModal}>Cancel</button>
-              <button className='button button--delete' onClick={() => deleteList(id)}>Delete</button>
+              <button className='button button--delete' onClick={() => {if(targetListId) deleteList(targetListId)} }>Delete</button>
             </div>
           </dialog>
         </div>
