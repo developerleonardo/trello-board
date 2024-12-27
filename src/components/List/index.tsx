@@ -14,11 +14,11 @@ interface ListProps {
 }
 const List: React.FC<ListProps> = ({ list }: ListProps) => {
   const { id, title } = list;
-  const { updateTitleList, addCards, deleteList, openConfirmationModal } =
+  const { updateTitleList, addCards, deleteList, openConfirmationModal, cards } =
     useContext(TrelloBoardContext);
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  const tasksIds = useMemo(() => list.cards!.map((card) => card.id), [list.cards]);
+  const tasksIds = useMemo(() => cards.map((card) => card.id), [list.cards]);
 
   const {
     attributes,
@@ -51,8 +51,9 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
   };
 
   // Confirm delete list
-  const checkDeleteListValidity = (id: Id, list: ListType): void => {
-    if(list.cards?.length) {
+  const checkDeleteListValidity = (id: Id): void => {
+    const isACardInList = cards.some((card) => card.listId === id);
+    if (isACardInList) {
       openConfirmationModal(id);
     } else {
       deleteList(id);
@@ -89,22 +90,23 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
                 <FaRegTrashAlt
                   className="add-list__icon add-list__icon--delete"
                   onClick={() => {
-                    checkDeleteListValidity(id, list);
+                    checkDeleteListValidity(id);
                   } }
                 />
               </button>
               <RxDragHandleDots2 className="add-list__icon add-list__icon--drag" />
             </span>
           </div>
-          <button className="add-list__button" onClick={() => addCards(list)}>
+          <button className="add-list__button" onClick={() => addCards(id)}>
             Add a new card
           </button>
         </div>
         <div className="cards-container">
           <SortableContext items={tasksIds}>
-            {list.cards?.map((card) => (
-              <Card key={card.id} card={card} />
-            ))}
+            {cards?.map((card) => {
+              if(card.listId === id) return <Card key={card.id} card={card} />;
+            }
+            )}
           </SortableContext>
         </div>
       </div>

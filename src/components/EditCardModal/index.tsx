@@ -11,6 +11,7 @@ import "./EditCardModal.css";
 const EditCardModal = (): JSX.Element => {
   const { cardToEdit, editCard, setCardToEdit, deleteCard, isCardEdited, setIsCardEdited } = useContext(TrelloBoardContext);
   const [inputValues, setInputValues] = useState<CardType>({
+    listId: "",
     id: "",
     title: "",
     description: "",
@@ -20,6 +21,7 @@ const EditCardModal = (): JSX.Element => {
   useEffect(() => {
     if (cardToEdit) {
       setInputValues({
+        listId: cardToEdit.listId as string,
         id: cardToEdit.id as string,
         title: cardToEdit.title,
         description: cardToEdit.description,

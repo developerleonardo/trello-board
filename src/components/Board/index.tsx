@@ -24,7 +24,7 @@ import "./Board.css"
 const Board = (): JSX.Element => {
     const [activeList, setActiveList] = useState<ListType | null>(null);
   const [activeCard, setActiveCard] = useState<CardType | null>(null);
-  const { lists, setLists, createList, selectedBoard } = useContext(TrelloBoardContext);
+  const { lists, setLists, createList, selectedBoard, setCards } = useContext(TrelloBoardContext);
 
   const { id, title } = selectedBoard
 
@@ -60,54 +60,51 @@ const Board = (): JSX.Element => {
 
     if (!over || active.id === over.id) return;
 
-    const activeType = active.data.current?.type;
-    const overType = over.data.current?.type;
+    const activeId = active.id;
+    const overId = over.id;
 
-    setLists((lists: Array<ListType>) => {
-      // Deep copy the lists to avoid mutating state directly
-      const newList = [...lists];
+    const isActiveACard = active.data.current?.type === "Card";
+    const isOverACard = over.data.current?.type === "Card";
 
-      if (activeType === "Card" && overType === "Card") {
-        // Find active card and its list
-        const activeListIndex = newList.findIndex((list) =>
-          list.cards?.some((card) => card.id === active.id)
+    if(!isActiveACard) return
+
+    // Drop a card over another card
+    if (isActiveACard && isOverACard) {
+      setCards((cards: Array<CardType>) => {
+        const newCards = [...cards];
+        const activeCardIndex = newCards.findIndex(
+          (card) => card.id === activeId
         );
-        const overListIndex = newList.findIndex((list) =>
-          list.cards?.some((card) => card.id === over.id)
+        const overCardIndex = newCards.findIndex((card) => card.id === overId);
+
+        if (activeCardIndex === -1 || overCardIndex === -1) return cards;
+        if (activeCardIndex === overCardIndex) return cards; // No movement needed
+
+        cards[activeCardIndex].listId = cards[overCardIndex].listId;
+
+        const updatedCards = arrayMove(newCards, activeCardIndex, overCardIndex);
+
+        return updatedCards;
+      })
+    }
+
+    const isOverAList = over.data.current?.type === "List";
+
+    //Drop a card over a list
+    if(isActiveACard && isOverAList) {
+      setCards((cards: Array<CardType>) => {
+        const newCards = [...cards];
+        const activeCardIndex = newCards.findIndex(
+          (card) => card.id === activeId
         );
 
-        if (activeListIndex === -1 || overListIndex === -1) return lists;
+        if (activeCardIndex === -1) return cards;
 
-        const activeCardIndex = newList[activeListIndex].cards!.findIndex(
-          (card) => card.id === active.id
-        );
-        const overCardIndex = newList[overListIndex].cards!.findIndex(
-          (card) => card.id === over.id
-        );
+        newCards[activeCardIndex].listId = overId;
 
-        if (activeListIndex === overListIndex) {
-          // Same list: reorder cards using arrayMove
-          const reorderedCards = arrayMove(
-            newList[activeListIndex].cards!,
-            activeCardIndex,
-            overCardIndex
-          );
-          newList[activeListIndex] = {
-            ...newList[activeListIndex],
-            cards: reorderedCards,
-          };
-        } else {
-          // Different lists: remove from active and insert into over
-          const [movedCard] = newList[activeListIndex].cards!.splice(
-            activeCardIndex,
-            1
-          );
-          newList[overListIndex].cards!.splice(overCardIndex, 0, movedCard);
-        }
-      }
-
-      return newList;
-    });
+        return arrayMove(newCards, activeCardIndex, activeCardIndex);
+      })
+    }
   };
 
   const onDragEnd = (event: DragEndEvent) => {

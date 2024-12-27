@@ -14,13 +14,14 @@ interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
   setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
   lists: Array<ListType>;
+  cards: Array<CardType>;
   setLists: Dispatch<SetStateAction<Array<ListType>>>;
   createList: (id: Id) => void;
   updateTitleList: (title: string, id: Id) => void;
   deleteList: (id: Id) => void;
   targetListId: Id | null;
   openConfirmationModal: (id: Id) => void;
-  addCards: (card: ListType) => void;
+  addCards: (listId: Id) => void;
   editCard: (card: CardType) => void;
   cardToEdit: CardType | null;
   setCardToEdit: Dispatch<SetStateAction<CardType | null>>;
@@ -33,12 +34,14 @@ interface TrelloBoardContextProps {
   setIsCardEdited: Dispatch<SetStateAction<boolean>>;
   getBoards: () => void;
   selectedBoard: BoardType;
+  setCards: Dispatch<SetStateAction<Array<CardType>>>;
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   kanbanBoards: [],
   setKanbanBoards: () => {},
   lists: [],
+  cards: [],
   setLists: () => {},
   createList: () => {},
   updateTitleList: () => {},
@@ -58,11 +61,13 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   setIsCardEdited: () => {},
   getBoards: () => {},
   selectedBoard: { id: "", title: "" },
+  setCards: () => {},
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
-  const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [kanbanBoards, setKanbanBoards] = useState<TrelloBoardContextProps["kanbanBoards"]>([]);
+  const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
+  const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [targetListId, setTargetListId] = useState<Id | null>(null);
@@ -112,6 +117,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       const updatedLists = prevLists.filter((list) => list.id !== id);
       return updatedLists;
     });
+    const cardsToDelete = cards.filter((card) => card.listId === id);
+    setCards(cardsToDelete);
     setIsConfirmationModalOpen(false);
   };
 
@@ -128,22 +135,16 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   // Function to add a card to a list
-  const addCards = (card: ListType): void => {
+  const addCards = (listId: Id): void => {
     const cardToAdd: CardType = {
+      listId: listId,
       id: uuid(), // Generate a unique ID for the new card
       title: "Card's title", // Set a default title for the new card
       description:
         "This is a description preview. To edit this card, please click on the icon in the right top", // Set a default description
       priority: "Low", // Set a default priority
     };
-    setLists((lists) =>
-      lists.map((list) => {
-        if (list.id === card.id) {
-          return { ...list, cards: [...(list.cards || []), cardToAdd] }; // Add the new card to the list if the ID matches
-        }
-        return list; // Return the list unchanged if the ID does not match
-      })
-    );
+    setCards([...cards, cardToAdd]); // Add the new card to the existing cards
   };
 
   //function to send a card to edit
@@ -154,28 +155,27 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   // Function to edit a card
   const editCard = (cardToEdit: CardType): void => {
-    setLists((lists) =>
-      lists.map((list) => {
-        const updatedCards = list.cards?.map((card) => {
-          if (card.id === cardToEdit.id) {
-            return cardToEdit; // Update the card if the ID matches
-          }
-          return card; // Return the card unchanged if the ID does not match
-        });
-        return { ...list, cards: updatedCards }; // Update the list with the updated cards
-      })
-    );
+    setCards((prevCards) => {
+      const updatedCards = prevCards.map((card) => {
+        if (card.id === cardToEdit.id) {
+          return cardToEdit; // Update the card if the ID matches
+        }
+        return card; // Return the card unchanged if the ID does not match
+      });
+      return updatedCards;
+    });
   };
 
   const deleteCard = (cardId: Id): void => {
-    setLists((lists) =>
-      lists.map((list) => {
-        const updatedCards = list.cards?.filter((card) => card.id !== cardId); // Filter out the card with the matching ID
-        return { ...list, cards: updatedCards }; // Update the list with the filtered cards
-      })
+    setCards((prevCards) => {
+      const updatedCards = prevCards.filter((card) => card.id !== cardId);
+      return updatedCards;
+    }
     );
     setCardToEdit(null);
   };
+
+  console.log("cards", cards);
 
   const selectedBoard = kanbanBoards[0];
 
@@ -204,6 +204,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setIsCardEdited,
         getBoards,
         selectedBoard,
+        cards,
+        setCards,
       }}
     >
       {children}
