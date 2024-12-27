@@ -26,7 +26,7 @@ const Board = (): JSX.Element => {
   const [activeCard, setActiveCard] = useState<CardType | null>(null);
   const { lists, setLists, createList, selectedBoard } = useContext(TrelloBoardContext);
 
-  const { id, title } = selectedBoard;
+  const { id, title } = selectedBoard
 
   const customLists = useMemo(
     () =>

@@ -4,9 +4,11 @@ import {
   useState,
   Dispatch,
   SetStateAction,
+  useEffect,
 } from "react";
 import { BoardType, CardType, Id, ListType } from "../types";
 import { v4 as uuid } from "uuid";
+import { supabase } from "../supabase/client";
 
 interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
@@ -29,6 +31,7 @@ interface TrelloBoardContextProps {
   closeConfirmationModal: () => void;
   isCardEdited: boolean;
   setIsCardEdited: Dispatch<SetStateAction<boolean>>;
+  getBoards: () => void;
   selectedBoard: BoardType;
 }
 
@@ -53,22 +56,32 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
-  selectedBoard: { id: "", title: ""},
+  getBoards: () => {},
+  selectedBoard: { id: "", title: "" },
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
-  const [kanbanBoards, setKanbanBoards] = useState<TrelloBoardContextProps["kanbanBoards"]>([
-    {
-      id: uuid(),
-      title: "TRELLO BOARD",
-    },
-  ]);
- 
+  const [kanbanBoards, setKanbanBoards] = useState<TrelloBoardContextProps["kanbanBoards"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [targetListId, setTargetListId] = useState<Id | null>(null);
   const [isCardEdited, setIsCardEdited] = useState(false);
+
+  // Function to get the boards from supabase
+  const getBoards = async () => {
+    const { data, error } = await supabase.from("boards").select("*");
+    if (error) {
+      console.log("error", error);
+    } else {
+      if (data) {
+        setKanbanBoards(data);
+      }
+    }
+  };
+  useEffect(() => {
+    getBoards();
+  }, []);
 
   // Function to create a new list
   const createList = (boardId: Id): void => {
@@ -163,6 +176,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     );
     setCardToEdit(null);
   };
+
   const selectedBoard = kanbanBoards[0];
 
   return (
@@ -188,6 +202,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         closeConfirmationModal,
         isCardEdited,
         setIsCardEdited,
+        getBoards,
         selectedBoard,
       }}
     >

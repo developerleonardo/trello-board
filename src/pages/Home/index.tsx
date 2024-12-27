@@ -1,12 +1,15 @@
-import { useEffect } from "react"
-import { Board } from "../../components/Board"
-import { supabase } from "../../supabase/client"
+import { useContext, useEffect } from "react";
+import { Board } from "../../components/Board";
+import { supabase } from "../../supabase/client";
+import { TrelloBoardContext } from "../../Context";
+import { Loading } from "../../components/Loading";
 //import { useNavigate } from "react-router-dom"
 
 const Home = (): JSX.Element => {
+  const { kanbanBoards } = useContext(TrelloBoardContext);
 
   // const navigate = useNavigate()
-  
+
   // const getUser = async () => {
   //   const {data: user, error} = await supabase.auth.getUser()
   //   if(error) {
@@ -20,28 +23,27 @@ const Home = (): JSX.Element => {
   // }
 
   // useEffect(() => {
-  //   getUser() 
+  //   getUser()
   // }, [navigate])
 
   const getUser = async () => {
-    const {data: user} = await supabase.auth.getUser()
-    console.log("userID", user.user?.id)
-  }
+    const { data: user } = await supabase.auth.getUser();
+    console.log("userID", user.user?.id);
+  };
 
   useEffect(() => {
-    getUser()
-  }, [])
-  
+    getUser();
+  }, []);
 
   const logOut = async () => {
-    await supabase.auth.signOut()
-  }
+    await supabase.auth.signOut();
+  };
   return (
     <>
-        <Board />
-        <button onClick={logOut}>Log out</button>
+      {kanbanBoards.length === 0 ? <Loading /> : <Board />}
+      <button onClick={logOut}>Log out</button>
     </>
-  )
-}
+  );
+};
 
-export { Home }
+export { Home };
