@@ -4,7 +4,6 @@ type Priority = 'Low' | 'Medium' | 'High';
 export interface BoardType {
   id: Id;
   title: string;
-  lists: Array<ListType>;
 }
 
 export interface ListType {

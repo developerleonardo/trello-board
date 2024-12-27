@@ -53,7 +53,7 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
-  selectedBoard: { id: "", title: "", lists: [] },
+  selectedBoard: { id: "", title: ""},
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
@@ -62,7 +62,6 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     {
       id: uuid(),
       title: "TRELLO BOARD",
-      lists: [],
     },
   ]);
  
