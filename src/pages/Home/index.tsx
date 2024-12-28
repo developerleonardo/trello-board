@@ -28,7 +28,7 @@ const Home = (): JSX.Element => {
 
   const getUser = async () => {
     const { data: user } = await supabase.auth.getUser();
-    console.log("userID", user.user?.id);
+    return user;
   };
 
   useEffect(() => {

@@ -36,17 +36,14 @@ export type Database = {
     Tables: {
       boards: {
         Row: {
-          created_at: string
           id: string
           title: string
         }
         Insert: {
-          created_at?: string
           id?: string
           title: string
         }
         Update: {
-          created_at?: string
           id?: string
           title?: string
         }
@@ -54,36 +51,33 @@ export type Database = {
       }
       cards: {
         Row: {
-          created_at: string | null
           description: string | null
           id: string
-          list_id: string
-          position: number
+          listId: string
           priority: string
           title: string
+          userId: string
         }
         Insert: {
-          created_at?: string | null
           description?: string | null
           id: string
-          list_id: string
-          position: number
+          listId: string
           priority: string
           title: string
+          userId: string
         }
         Update: {
-          created_at?: string | null
           description?: string | null
           id?: string
-          list_id?: string
-          position?: number
+          listId?: string
           priority?: string
           title?: string
+          userId?: string
         }
         Relationships: [
           {
-            foreignKeyName: "cards_list_id_fkey"
-            columns: ["list_id"]
+            foreignKeyName: "cards_listId_fkey"
+            columns: ["listId"]
             isOneToOne: false
             referencedRelation: "lists"
             referencedColumns: ["id"]
@@ -92,30 +86,27 @@ export type Database = {
       }
       lists: {
         Row: {
-          board_id: string
-          created_at: string
+          boardId: string
           id: string
-          position: number
           title: string
+          userId: string
         }
         Insert: {
-          board_id?: string
-          created_at?: string
+          boardId?: string
           id?: string
-          position: number
           title: string
+          userId: string
         }
         Update: {
-          board_id?: string
-          created_at?: string
+          boardId?: string
           id?: string
-          position?: number
           title?: string
+          userId?: string
         }
         Relationships: [
           {
-            foreignKeyName: "lists_board_id_fkey"
-            columns: ["board_id"]
+            foreignKeyName: "lists_boardId_fkey"
+            columns: ["boardId"]
             isOneToOne: false
             referencedRelation: "boards"
             referencedColumns: ["id"]

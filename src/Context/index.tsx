@@ -65,7 +65,9 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
-  const [kanbanBoards, setKanbanBoards] = useState<TrelloBoardContextProps["kanbanBoards"]>([]);
+  const [kanbanBoards, setKanbanBoards] = useState<
+    TrelloBoardContextProps["kanbanBoards"]
+  >([]);
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
@@ -75,32 +77,89 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   // Function to get the boards from supabase
   const getBoards = async () => {
-    const { data, error } = await supabase.from("boards").select("*");
-    if (error) {
-      console.log("error", error);
-    } else {
+    try {
+      const { data, error } = await supabase.from("boards").select("*");
+      if(error) throw error;
       if (data) {
         setKanbanBoards(data);
       }
+    } catch (error) {
+      console.error("error", error);
     }
   };
+  // Function to get the lists from supabase
+  const getLists = async () => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from("lists")
+        .select("*")
+        .eq("userId", currentUser.id);
+      if (error) throw error;
+      if (data) {
+        setLists(data);
+      }
+    } catch (error) {
+      console.error("error", error);
+    }
+  };
+  // Function to get the cards from supabase
+  const getCards = async () => {
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if (!currentUser) return;
+      const { data, error } = await supabase
+        .from("cards")
+        .select("*")
+        .eq("userId", currentUser.id);
+      if (error) throw error;
+      if (data) {
+        setCards(data);
+      }
+    } catch(error) {
+      console.error("error", error);
+    }
+  }
   useEffect(() => {
     getBoards();
+    getLists();
+    getCards();
   }, []);
 
   // Function to create a new list
-  const createList = (boardId: Id): void => {
+  const createList = async (boardId: Id): Promise<void> => {
     const newColumn: ListType = {
       boardId: boardId,
       id: uuid(), // Generate a unique ID for the new list
       title: `List ${lists.length + 1}`, // Set the title of the new list
-      cards: [], // Initialize with an empty array of cards
     };
-    setLists([...lists, newColumn]); // Add the new list to the existing lists
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      const currentUser = user.user;
+      const { error } = await supabase.from("lists").insert({
+        id: newColumn.id,
+        title: newColumn.title,
+        boardId: boardId,
+        userId: currentUser?.id,
+      });
+      if (error) throw error;
+      setLists([...lists, newColumn]); // Add the new list to the existing lists
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   // Function to update the title of a list
-  const updateTitleList = (title: string, id: Id): void => {
+  const updateTitleList = async (title: string, id: Id): Promise<void> => {
+    try {
+      const {data: user} = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if(!currentUser) return;
+      const {error} = await supabase.from("lists").update({title}).eq("id", id);
+      if(error) throw error;
     setLists((lists) =>
       lists.map((list) => {
         if (list.id === id) {
@@ -109,17 +168,29 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         return list; // Return the list unchanged if the ID does not match
       })
     );
+    } catch(error) {
+      console.error("error", error);
+    }
   };
 
   // Function to delete a list
-  const deleteList = (id: Id): void => {
-    setLists((prevLists) => {
-      const updatedLists = prevLists.filter((list) => list.id !== id);
-      return updatedLists;
-    });
-    const cardsToDelete = cards.filter((card) => card.listId === id);
-    setCards(cardsToDelete);
-    setIsConfirmationModalOpen(false);
+  const deleteList = async(id: Id): Promise<void> => {
+    try {
+      const {data: user} = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if(!currentUser) return;
+      const {error} = await supabase.from("lists").delete().eq("id", id);
+      if(error) throw error;
+      setLists((prevLists) => {
+        const updatedLists = prevLists.filter((list) => list.id !== id);
+        return updatedLists;
+      });
+      const cardsToDelete = cards.filter((card) => card.listId === id);
+      if(cardsToDelete.length > 0) setCards(cardsToDelete);
+      setIsConfirmationModalOpen(false);
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   // Function to open confirmation modal
@@ -135,7 +206,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   // Function to add a card to a list
-  const addCards = (listId: Id): void => {
+  const addCards = async (listId: Id): Promise<void> => {
     const cardToAdd: CardType = {
       listId: listId,
       id: uuid(), // Generate a unique ID for the new card
@@ -144,7 +215,23 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         "This is a description preview. To edit this card, please click on the icon in the right top", // Set a default description
       priority: "Low", // Set a default priority
     };
-    setCards([...cards, cardToAdd]); // Add the new card to the existing cards
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if(!currentUser) return;
+      const { error } = await supabase.from("cards").insert({
+        id: cardToAdd.id,
+        title: cardToAdd.title,
+        description: cardToAdd.description,
+        priority: cardToAdd.priority,
+        listId: listId,
+        userId: currentUser.id,
+      });
+      if (error) throw error;
+      setCards([...cards, cardToAdd]); // Add the new card to the existing cards
+    } catch (error) {
+      console.error("error", error);
+    }
   };
 
   //function to send a card to edit
@@ -154,28 +241,43 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   // Function to edit a card
-  const editCard = (cardToEdit: CardType): void => {
-    setCards((prevCards) => {
-      const updatedCards = prevCards.map((card) => {
-        if (card.id === cardToEdit.id) {
-          return cardToEdit; // Update the card if the ID matches
-        }
-        return card; // Return the card unchanged if the ID does not match
+  const editCard = async (cardToEdit: CardType): Promise<void> => {
+    try {
+      const {data: user} = await supabase.auth.getUser();
+      const currentUser = user.user;
+      if(!currentUser) return;
+      const {error} = await supabase.from("cards").update(cardToEdit).eq("id", cardToEdit.id);
+      if(error) throw error;
+      setCards((prevCards) => {
+        const updatedCards = prevCards.map((card) => {
+          if (card.id === cardToEdit.id) {
+            return cardToEdit; // Update the card if the ID matches
+          }
+          return card; // Return the card unchanged if the ID does not match
+        });
+        return updatedCards;
       });
-      return updatedCards;
-    });
+    } catch(error) {
+      console.error(error);
+    }
   };
 
-  const deleteCard = (cardId: Id): void => {
+  const deleteCard = async(cardId: Id): Promise<void> => {
+    try {
+    const {data: user} = await supabase.auth.getUser();
+    const currentUser = user.user;
+    if(!currentUser) return;
+    const {error} = await supabase.from("cards").delete().eq("id", cardId);
+    if(error) throw error;
     setCards((prevCards) => {
       const updatedCards = prevCards.filter((card) => card.id !== cardId);
       return updatedCards;
-    }
-    );
+    });
     setCardToEdit(null);
+    } catch(error) {
+      console.error("error", error);
+    }
   };
-
-  console.log("cards", cards);
 
   const selectedBoard = kanbanBoards[0];
 

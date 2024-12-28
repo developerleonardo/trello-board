@@ -18,7 +18,7 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
     useContext(TrelloBoardContext);
   const [editMode, setEditMode] = useState<boolean>(false);
 
-  const tasksIds = useMemo(() => cards.map((card) => card.id), [list.cards]);
+  const tasksIds = useMemo(() => cards.map((card) => card.id), [cards]);
 
   const {
     attributes,
