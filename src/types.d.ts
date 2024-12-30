@@ -10,6 +10,7 @@ export interface ListType {
   boardId: Id;
   id: Id;
   title: string;
+  cards?: Array<CardType>;
 }
 
 export interface CardType {
