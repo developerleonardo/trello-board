@@ -36,15 +36,15 @@ export type Database = {
     Tables: {
       boards: {
         Row: {
-          id: string | number
+          id: string
           title: string
         }
         Insert: {
-          id?: string | number
+          id?: string
           title: string
         }
         Update: {
-          id?: string | number
+          id?: string
           title?: string
         }
         Relationships: []
@@ -52,27 +52,30 @@ export type Database = {
       cards: {
         Row: {
           description: string
-          id: string | number
-          listId: string | number
-          priority: 'Low' | 'Medium' | 'High'
+          id: string
+          listId: string
+          order: number | null
+          priority: string
           title: string
-          userId: string | number
+          userId: string
         }
         Insert: {
-          description: string
-          id: string | number
-          listId: string | number
-          priority: 'Low' | 'Medium' | 'High'
+          description?: string
+          id: string
+          listId: string
+          order?: number | null
+          priority: string
           title: string
-          userId: string | number
+          userId: string
         }
         Update: {
           description?: string
-          id?: string | number
-          listId?: string | number
-          priority?: 'Low' | 'Medium' | 'High'
+          id?: string
+          listId?: string
+          order?: number | null
+          priority?: string
           title?: string
-          userId?: string | number
+          userId?: string
         }
         Relationships: [
           {
@@ -86,22 +89,25 @@ export type Database = {
       }
       lists: {
         Row: {
-          boardId: string | number
-          id: string | number
+          boardId: string
+          id: string
+          order: number | null
           title: string
-          userId: string | number
+          userId: string
         }
         Insert: {
-          boardId?: string | number
-          id?: string | number
+          boardId?: string
+          id?: string
+          order?: number | null
           title: string
-          userId: string | number
+          userId: string
         }
         Update: {
-          boardId?: string | number
-          id?: string | number
+          boardId?: string
+          id?: string
+          order?: number | null
           title?: string
-          userId?: string | number
+          userId?: string
         }
         Relationships: [
           {

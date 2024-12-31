@@ -19,19 +19,19 @@ import { TrelloBoardContext } from "../../Context";
 import { Card } from "../Card";
 import { FaPlus } from "react-icons/fa6";
 import { EmptyState } from "../EmptyState";
-import "./Board.css"
+import { supabase } from "../../supabase/client";
+import "./Board.css";
 
 const Board = (): JSX.Element => {
-    const [activeList, setActiveList] = useState<ListType | null>(null);
+  const [activeList, setActiveList] = useState<ListType | null>(null);
   const [activeCard, setActiveCard] = useState<CardType | null>(null);
-  const { lists, setLists, createList, selectedBoard, setCards } = useContext(TrelloBoardContext);
+  const { lists, setLists, createList, selectedBoard, setCards } =
+    useContext(TrelloBoardContext);
 
-  const { id, title } = selectedBoard
+  const { id, title } = selectedBoard;
 
   const customLists = useMemo(
-    () =>
-      lists
-        .filter((list) => list.boardId === selectedBoard.id),
+    () => lists.filter((list) => list.boardId === selectedBoard.id),
     [lists, selectedBoard.id, selectedBoard.title]
   );
   const customListsId = useMemo(() => lists.map((list) => list.id), [lists]);
@@ -43,6 +43,34 @@ const Board = (): JSX.Element => {
       },
     })
   );
+
+  const updateCardOrderInSupabase = async (cards: Array<CardType>) => {
+    try {
+      const { data, error } = await supabase.from("cards").upsert(cards);
+      if (error) {
+        console.error("Error updating card order in Supabase:", error);
+      } else {
+        console.log("Card order updated successfully:", data);
+      }
+    } catch (err) {
+      console.error("Unexpected error while updating card order:", err);
+    }
+  };
+
+  const updateListOrderInSupabase = async (lists: Array<ListType>) => {
+    try {
+      const { data, error } = await supabase.from("lists").upsert(lists);
+      if (error) {
+        console.error("Error updating list order in Supabase:", error);
+      } else {
+        console.log("List order updated successfully:", data);
+      }
+    } catch (err) {
+      console.error("Unexpected error while updating list order:", err);
+    }
+  };
+  
+  
 
   const onDragStart = (event: DragStartEvent) => {
     if (event.active.data.current?.type === "List") {
@@ -66,7 +94,7 @@ const Board = (): JSX.Element => {
     const isActiveACard = active.data.current?.type === "Card";
     const isOverACard = over.data.current?.type === "Card";
 
-    if(!isActiveACard) return
+    if (!isActiveACard) return;
 
     // Drop a card over another card
     if (isActiveACard && isOverACard) {
@@ -82,16 +110,26 @@ const Board = (): JSX.Element => {
 
         cards[activeCardIndex].listId = cards[overCardIndex].listId;
 
-        const updatedCards = arrayMove(newCards, activeCardIndex, overCardIndex);
+        const updatedCards = arrayMove(
+          newCards,
+          activeCardIndex,
+          overCardIndex
+        );
+
+        try {
+          updateCardOrderInSupabase(updatedCards);
+        } catch (error) {
+          console.error("Error updating card order in Supabase:", error);
+        }
 
         return updatedCards;
-      })
+      });
     }
 
     const isOverAList = over.data.current?.type === "List";
 
     //Drop a card over a list
-    if(isActiveACard && isOverAList) {
+    if (isActiveACard && isOverAList) {
       setCards((cards: Array<CardType>) => {
         const newCards = [...cards];
         const activeCardIndex = newCards.findIndex(
@@ -102,95 +140,57 @@ const Board = (): JSX.Element => {
 
         newCards[activeCardIndex].listId = overId;
 
-        return arrayMove(newCards, activeCardIndex, activeCardIndex);
-      })
+        const reorderedCards = arrayMove(newCards, activeCardIndex, activeCardIndex);
+
+        try {
+          updateCardOrderInSupabase(reorderedCards);
+        } catch (error) {
+          console.error("Error updating card order in Supabase:", error);
+        }
+        return reorderedCards;
+      });
     }
   };
 
   const onDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-
+  
     // Reset active state
     setActiveList(null);
     setActiveCard(null);
-
+  
     if (!over || active.id === over.id) return;
-
+  
     const activeType = active.data.current?.type;
     const overType = over.data.current?.type;
-
+  
     setLists((lists: Array<ListType>) => {
       const newList = [...lists];
-
-      if (activeType === "Card" && overType === "Card") {
-        const activeListIndex = newList.findIndex((list) =>
-          list.cards?.some((card) => card.id === active.id)
-        );
-
-        if (activeListIndex === -1) return lists;
-
-        const activeCardIndex = newList[activeListIndex].cards!.findIndex(
-          (card) => card.id === active.id
-        );
-        const overCardIndex = newList[activeListIndex].cards!.findIndex(
-          (card) => card.id === over.id
-        );
-
-        if (activeCardIndex === -1 || overCardIndex === -1) return lists;
-        if (activeCardIndex === overCardIndex) return lists; // No movement needed
-
-        const updatedCards = arrayMove(
-          newList[activeListIndex].cards!,
-          activeCardIndex,
-          overCardIndex
-        );
-
-        newList[activeListIndex] = {
-          ...newList[activeListIndex],
-          cards: updatedCards,
-        };
-
-        return newList;
-      }
-
-      // Handle card movement between lists (already implemented)
-      if (activeType === "Card" && overType === "List") {
-        const activeListIndex = newList.findIndex((list) =>
-          list.cards?.some((card) => card.id === active.id)
-        );
-        const overListIndex = newList.findIndex((list) => list.id === over.id);
-
-        if (activeListIndex === -1 || overListIndex === -1) return lists;
-
-        const activeCardIndex = newList[activeListIndex].cards!.findIndex(
-          (card) => card.id === active.id
-        );
-        const [movedCard] = newList[activeListIndex].cards!.splice(
-          activeCardIndex,
-          1
-        );
-
-        newList[overListIndex].cards!.push(movedCard);
-
-        return newList;
-      }
-
-      // Handle list reordering (already implemented)
+  
+      // Handle list reordering
       if (activeType === "List" && overType === "List") {
-        const activeListIndex = newList.findIndex(
-          (list) => list.id === active.id
-        );
+        const activeListIndex = newList.findIndex((list) => list.id === active.id);
         const overListIndex = newList.findIndex((list) => list.id === over.id);
-
+  
         if (activeListIndex === -1 || overListIndex === -1) return lists;
-
-        return arrayMove(newList, activeListIndex, overListIndex);
+  
+        const reorderedLists = arrayMove(newList, activeListIndex, overListIndex);
+  
+        // Save reordered lists to Supabase
+        const reorderedListsWithOrder = reorderedLists.map((list, index) => ({
+          ...list,
+          order: index, // Update order field
+        }));
+        updateListOrderInSupabase(reorderedListsWithOrder);
+  
+        return reorderedLists;
       }
-
+  
       return newList;
     });
   };
   
+
   if (customLists.length === 0) {
     return (
       <>
@@ -203,7 +203,7 @@ const Board = (): JSX.Element => {
   }
   return (
     <main className="board">
-        <DndContext
+      <DndContext
         sensors={sensors}
         onDragStart={onDragStart}
         onDragEnd={onDragEnd}
@@ -233,7 +233,7 @@ const Board = (): JSX.Element => {
         )}
       </DndContext>
     </main>
-  )
-}
+  );
+};
 
-export { Board }
+export { Board };

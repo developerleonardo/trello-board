@@ -104,7 +104,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
                { data: lists, error: listsError }, 
                { data: cards, error: cardsError }] = await Promise.all([
           supabase.from("boards").select("*"),
-          supabase.from("lists").select("*").eq("userId", currentUser),
+          supabase.from("lists").select("*").eq("userId", currentUser).order("order", { ascending: true }),
           supabase.from("cards").select("*").eq("userId", currentUser),
         ]);
   
@@ -123,14 +123,16 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     };
     fetchAllData();
   }, [currentUser]);
-  
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
+    // Determine the order for the new list
+    const newOrder = lists.filter((list) => list.boardId === boardId).length;
     const newColumn: ListType = {
       boardId: boardId,
       id: uuid(), // Generate a unique ID for the new list
       title: `List ${lists.length + 1}`, // Set the title of the new list
+      order: newOrder, // Set the order of the new list
     };
     try {
       const { data: user } = await supabase.auth.getUser();
@@ -141,6 +143,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         title: newColumn.title,
         boardId: boardId,
         userId: currentUser?.id,
+        order: newColumn.order,
       });
       if (error) throw error;
       setLists([...lists, newColumn]); // Add the new list to the existing lists
@@ -200,6 +203,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   // Function to add a card to a list
   const addCards = async (listId: Id): Promise<void> => {
+    const cardsOrder = cards.filter((card) => card.listId === listId).length;
     const cardToAdd: CardType = {
       listId: listId,
       id: uuid(), // Generate a unique ID for the new card
@@ -207,6 +211,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       description:
         "This is a description preview. To edit this card, please click on the icon in the right top", // Set a default description
       priority: "Low", // Set a default priority
+      order: cardsOrder, // Set the order of the new card
     };
     try {
       if(!currentUser) return;
@@ -217,6 +222,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         priority: cardToAdd.priority,
         listId: listId,
         userId: currentUser,
+        order: cardToAdd.order,
       });
       if (error) throw error;
       setCards([...cards, cardToAdd]); // Add the new card to the existing cards

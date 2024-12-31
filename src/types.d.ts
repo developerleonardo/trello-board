@@ -11,6 +11,7 @@ export interface ListType {
   id: Id;
   title: string;
   cards?: Array<CardType>;
+  order: number;
 }
 
 export interface CardType {
@@ -19,4 +20,5 @@ export interface CardType {
   title: string;
   description: string;
   priority: Priority;
+  order: number;
 }
