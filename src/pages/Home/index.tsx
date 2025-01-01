@@ -3,6 +3,7 @@ import { Board } from "../../components/Board";
 import { supabase } from "../../supabase/client";
 import { TrelloBoardContext } from "../../Context";
 import { Loading } from "../../components/Loading";
+import "./Home.css";
 //import { useNavigate } from "react-router-dom"
 
 const Home = (): JSX.Element => {
@@ -40,8 +41,8 @@ const Home = (): JSX.Element => {
   };
   return (
     <>
+      <button className="button log-out__button" onClick={logOut}>Log out</button>
       {kanbanBoards.length === 0 ? <Loading /> : <Board />}
-      <button onClick={logOut}>Log out</button>
     </>
   );
 };

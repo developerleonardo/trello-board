@@ -9,6 +9,7 @@ import {
 import { BoardType, CardType, Id, ListType } from "../types";
 import { v4 as uuid } from "uuid";
 import { supabase } from "../supabase/client";
+import { fetchBoards, fetchLists, fetchCards } from "../supabaseService";
 
 interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
@@ -100,49 +101,42 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         }
   
         // Fetch all data in parallel
-        const [{ data: boards, error: boardsError }, 
-               { data: lists, error: listsError }, 
-               { data: cards, error: cardsError }] = await Promise.all([
-          supabase.from("boards").select("*"),
-          supabase.from("lists").select("*").eq("userId", currentUser).order("order", { ascending: true }),
-          supabase.from("cards").select("*").eq("userId", currentUser),
+        const [fetchedBoards, fetchedLists, fetchedCards] = await Promise.all([
+          fetchBoards(),
+          fetchLists(currentUser),
+          fetchCards(currentUser),
         ]);
   
-        // Handle errors if any
-        if (boardsError) console.error("Boards error:", boardsError);
-        if (listsError) console.error("Lists error:", listsError);
-        if (cardsError) console.error("Cards error:", cardsError);
-  
-        // Update state with fetched data
-        if (boards) setKanbanBoards(boards);
-        if (lists) setLists(lists);
-        if (cards) setCards(cards);
+        setKanbanBoards(fetchedBoards);
+        setLists(fetchedLists);
+        setCards(fetchedCards);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
+  
     fetchAllData();
   }, [currentUser]);
+  
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
     // Determine the order for the new list
     const newOrder = lists.filter((list) => list.boardId === boardId).length;
     const newColumn: ListType = {
+      userId: currentUser,
       boardId: boardId,
       id: uuid(), // Generate a unique ID for the new list
       title: `List ${lists.length + 1}`, // Set the title of the new list
       order: newOrder, // Set the order of the new list
     };
     try {
-      const { data: user } = await supabase.auth.getUser();
-      const currentUser = user.user;
       if (!currentUser) return;
       const { error } = await supabase.from("lists").insert({
         id: newColumn.id,
         title: newColumn.title,
         boardId: boardId,
-        userId: currentUser?.id,
+        userId: currentUser,
         order: newColumn.order,
       });
       if (error) throw error;
@@ -205,6 +199,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const addCards = async (listId: Id): Promise<void> => {
     const cardsOrder = cards.filter((card) => card.listId === listId).length;
     const cardToAdd: CardType = {
+      userId: currentUser,
       listId: listId,
       id: uuid(), // Generate a unique ID for the new card
       title: "Card's title", // Set a default title for the new card
@@ -271,8 +266,6 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       console.error("error", error);
     }
   };
-
-  console.log("lists", lists);
 
   const selectedBoard = kanbanBoards[0];
 

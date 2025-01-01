@@ -1,36 +1,50 @@
-.login-container {
-    display: flex;
-    width: 350px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 48px 20px;
-    background-color: var(--grey-400);
-    border-radius: 10px;
-    color: var(--white);
+.login-page {
+    width: 80%;
+    height: 80vh;
+    display: grid;
+    grid-template-columns: 2fr 3fr;
     margin: auto;
+    place-items: center;
+    gap: 96px;
+}
+.login-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-rows: 40px 1fr;
+}
+.login-header-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    color: var(--secondary-white);
+    gap: 12px;
+}
+.login-header-container img {
+    width: 20px;
+    height: 20px;
+}
+.login-header {
+    font-size: var(--xl);
+    font-weight: 700;
 }
 .login-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
-    width: 100%;
-}
-.login-img{
-    width: 50px;
-    height: 50px;
-    margin-bottom: 24px;
+    width: 80%;
+    max-width: 370px;
+    color: var(--secondary-white);
+    margin-left: 24px;
 }
 .login-title{
-    font-size: var(--xl2);
+    font-size: var(--xxl);
     font-weight: 700;
     margin-bottom: 16px;
 }
 .login__label-email {
     font-size: var(--m);
     margin-bottom: 24px;
-    text-align: center;
 }
 .login__email-input {
     width: 100%;
@@ -52,10 +66,51 @@
     font-size: var(--m);
     font-weight: 700;
     cursor: pointer;
+    margin-bottom: 32px;
 }
 .login-button:hover {
-    background-color: var(--grey-200);
+    background-color: var(--grey-600);
     color: var(--white);
     border: 1px solid var(--grey-200);
-    transition: 0.2s;
+    transition: 0.3s;
+}
+.form-or {
+    text-align: center;
+    margin-bottom: 12px;
+    font-size: var(--sm);
+}
+.secondary-button {
+    background-color: transparent;
+    color: var(--secondary-white);
+    border: 1px solid var(--grey-200);
+    padding: 12px 16px;
+}
+.secondary-button:hover {
+    background-color: var(--grey-600);
+}
+.login-info {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #171717;
+    border-radius: 10px;
+    max-width: 800px;
+    color: var(--secondary-white);
+    padding: 80px;
+    text-align: center;
+}
+.login-info__img {
+    margin-bottom: 64px;
+    width: 100%;
+}
+.login-info__title {
+    font-size: var(--xl);
+    font-weight: 700;
+    margin-bottom: 16px;
+    margin-bottom: 32px;
+}
+.login-info__description {
+    font-size: var(--m);
 }
