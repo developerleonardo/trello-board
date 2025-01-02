@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Layout } from "../../components/Layout";
 import "./login.css";
 import { supabase } from "../../supabase/client";
+import { TrelloBoardContext } from "../../Context";
+import { SuccessMessage } from "../../components/SuccessMessage";
 
 const Login = () => {
+
+  const {setIsSuccessMessageOpen} = useContext(TrelloBoardContext);
+
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -12,6 +17,10 @@ const Login = () => {
       await supabase.auth.signInWithOtp({
         email,
       });
+      setIsSuccessMessageOpen(true);
+      setTimeout(() => {
+        setIsSuccessMessageOpen(false);
+      }, 5000);
     } catch (error) {
       console.error("Error sending OTP", error);
     }
@@ -39,6 +48,7 @@ const Login = () => {
               className="login__email-input"
               placeholder="Enter your email"
               onChange={handleEmailChange}
+              required
             />
             <button className="login-button">Send</button>
             <p className="form-or">Or</p>
@@ -55,6 +65,7 @@ const Login = () => {
           </p>
         </div>
       </div>
+      <SuccessMessage />
     </Layout>
   );
 };

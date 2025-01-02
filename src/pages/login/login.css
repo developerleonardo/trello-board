@@ -50,7 +50,7 @@
     width: 100%;
     padding: 12px 16px;
     border-radius: 5px;
-    background-color: var(--grey-300);
+    background-color: var(--grey-400);
     border: none;
     color: var(--white);
     margin-bottom: 32px;
@@ -113,4 +113,5 @@
 }
 .login-info__description {
     font-size: var(--m);
+    width: 80%;
 }

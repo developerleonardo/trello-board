@@ -9,24 +9,6 @@ import "./Home.css";
 const Home = (): JSX.Element => {
   const { kanbanBoards } = useContext(TrelloBoardContext);
 
-  // const navigate = useNavigate()
-
-  // const getUser = async () => {
-  //   const {data: user, error} = await supabase.auth.getUser()
-  //   if(error) {
-  //     console.error(error)
-  //     return
-  //   }
-  //   if(!user) {
-  //     navigate("/signin")
-  //     return
-  //   }
-  // }
-
-  // useEffect(() => {
-  //   getUser()
-  // }, [navigate])
-
   const getUser = async () => {
     const { data: user } = await supabase.auth.getUser();
     return user;

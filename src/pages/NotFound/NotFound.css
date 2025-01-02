@@ -1,0 +1,28 @@
+.not-found {
+    width: 500px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--white);
+}
+.not-found h1 {
+    font-size: var(--xxxl);
+    margin-bottom: 24px;
+    font-family: "Cal Sans", sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+.primary-button {
+    background-color: var(--white);
+    color: var(--grey-800);
+    font-weight: 700;
+    border: 1px solid var(--white);
+}
+.primary-button:hover {
+    background-color: var(--grey-600);
+    color: var(--white);
+    border: 1px solid var(--grey-200);
+    transition: 0.3s;
+}
