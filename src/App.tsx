@@ -15,7 +15,7 @@ const AppRoutes = () => {
 
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(( session) => {
       if (isGuest) {
         navigate("/");
       } else {

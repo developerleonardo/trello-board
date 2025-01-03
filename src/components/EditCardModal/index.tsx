@@ -2,20 +2,24 @@ import { useContext, useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoIosClose } from "react-icons/io";
 import { TrelloBoardContext } from "../../Context";
-import { CardType } from "../../types";
 import "./EditCardModal.css";
+import { CardType } from "../../types";
 
 // Cambiar el estado a false al darle click al boton de editar o al boton de eliminar
 // Modificar el closeModal para que se ejecute adecuadamente
 
 const EditCardModal = (): JSX.Element => {
   const { cardToEdit, editCard, setCardToEdit, deleteCard, isCardEdited, setIsCardEdited } = useContext(TrelloBoardContext);
+  const defaultOrder = 0;
+  const defaultUserId = '';
   const [inputValues, setInputValues] = useState<CardType>({
     listId: "",
     id: "",
     title: "",
     description: "",
     priority: "Low",
+    order: defaultOrder,
+    userId: defaultUserId,
   })
 
   useEffect(() => {
@@ -26,6 +30,8 @@ const EditCardModal = (): JSX.Element => {
         title: cardToEdit.title,
         description: cardToEdit.description,
         priority: cardToEdit.priority,
+        order: cardToEdit.order,
+        userId: cardToEdit.userId,
       })
     }
   }, [cardToEdit])

@@ -85,9 +85,6 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [currentUser, setCurrentUser] = useState<Id | null>(null);
   const [isSuccessMessageOpen, setIsSuccessMessageOpen] = useState(false);
 
-  console.log("isGuest", isGuest);
-  console.log("kanbanBoards", kanbanBoards);
-
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -337,7 +334,6 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     if(!isGuest && !currentUser) return;
     if(currentUser && !isGuest) {
       try {
-        if (!currentUser) return;
         const { error } = await supabase
           .from("cards")
           .update(cardToEdit)
