@@ -1,0 +1,40 @@
+.success-message {
+    width: 350px;
+    margin: 0 auto;
+    padding: 12px 20px;
+    position: absolute;
+    bottom: 80px;
+    left: 0;
+    right: 0;
+    background-color: var(--light-green);
+    color: var(--grey-800);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    border-radius: 5px;
+    gap: 16px;
+}
+.icon {
+    width: 40px;
+    height: 40px;
+}
+.circle-check {
+    width: 40px;
+    height: 40px;
+    background-color: var(--dark-green);
+    fill: var(--light-green);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.message h3 {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0;
+}
+.message p {
+    font-size: 14px;
+    margin: 0;
+}
