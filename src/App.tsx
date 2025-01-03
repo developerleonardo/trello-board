@@ -1,29 +1,36 @@
 import { BrowserRouter, useNavigate, useRoutes, useLocation } from "react-router-dom";
-import { TrelloBoardProvider } from "./Context";
+import { TrelloBoardContext, TrelloBoardProvider } from "./Context";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/login";
 import { NotFound } from "./pages/NotFound";
 import { supabase } from "./supabase/client";
 import "./App.css";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 const AppRoutes = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const {isGuest} = useContext(TrelloBoardContext);
+
+
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (!session && location.pathname !== "/signin") {
-        navigate("/signin");
-      } else if (session && location.pathname === "/signin") {
+      if (isGuest) {
         navigate("/");
+      } else {
+        if (!session && location.pathname !== "/signin") {
+          navigate("/signin");
+        } else if (session && location.pathname === "/signin") {
+          navigate("/");
+        }
       }
     });
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [navigate, location.pathname]);
+  }, [navigate, location.pathname, isGuest]);
 
   const routes = useRoutes([
     { path: "/", element: <Home /> },

@@ -1,13 +1,19 @@
 import { useContext, useState } from "react";
 import { Layout } from "../../components/Layout";
-import "./login.css";
 import { supabase } from "../../supabase/client";
 import { TrelloBoardContext } from "../../Context";
 import { SuccessMessage } from "../../components/SuccessMessage";
+import { v4 as uuid } from "uuid";
+import "./login.css";
 
 const Login = () => {
-
-  const {setIsSuccessMessageOpen} = useContext(TrelloBoardContext);
+  const {
+    setIsSuccessMessageOpen,
+    setIsGuest,
+    setKanbanBoards,
+    setLists,
+    setCards,
+  } = useContext(TrelloBoardContext);
 
   const [email, setEmail] = useState("");
 
@@ -28,6 +34,37 @@ const Login = () => {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
+  };
+
+  const handleGuestLogin = () => {
+    setIsGuest(true);
+    setKanbanBoards([
+      {
+        id: '1',
+        title: "TRELLO BOARD",
+      },
+    ]);
+    setLists([
+      {
+        boardId: '1',
+        userId: uuid(),
+        id: 'list1', // Generate a unique ID for the new list
+        title: "List 1", // Set the title of the new list
+        order: 0, // Set the order of the new list
+      },
+    ]);
+    setCards([
+      {
+        userId: uuid(),
+        listId: 'list1',
+        id: uuid(), // Generate a unique ID for the new card
+        title: "Card's title", // Set a default title for the new card
+        description:
+          "This is a description preview. To edit this card, please click on the icon in the right top", // Set a default description
+        priority: "Low", // Set a default priority
+        order: 0, // Set the order of the new card
+      },
+    ]);
   };
 
   return (
@@ -52,12 +89,18 @@ const Login = () => {
             />
             <button className="login-button">Send</button>
             <p className="form-or">Or</p>
-            <button className="button secondary-button">Login as Guest</button>
+            <button className="button secondary-button" onClick={handleGuestLogin}>Login as Guest</button>
           </form>
         </div>
         <div className="login-info">
-          <img src="./trello-board.jpg" alt="app-img" className="login-info__img" />
-          <h2 className="login-info__title">Simplify your workflow and stay organized with Boardy</h2>
+          <img
+            src="./trello-board.jpg"
+            alt="app-img"
+            className="login-info__img"
+          />
+          <h2 className="login-info__title">
+            Simplify your workflow and stay organized with Boardy
+          </h2>
           <p className="login-info__description">
             The ultimate task and project management tool. Collaborate
             seamlessly, track progress, and achieve your goals—all in one

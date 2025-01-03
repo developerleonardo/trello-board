@@ -2,19 +2,20 @@
     width: 80%;
     height: 80vh;
     display: grid;
-    grid-template-columns: 2fr 3fr;
+    grid-template-columns: 1fr 1fr;
     margin: auto;
     place-items: center;
-    gap: 96px;
 }
 .login-container {
     width: 100%;
     height: 100%;
     display: grid;
+    place-items: center;
     grid-template-rows: 40px 1fr;
+    padding: 50px 0;
 }
 .login-header-container {
-    width: 100%;
+    width: 370px;
     display: flex;
     align-items: center;
     color: var(--secondary-white);
@@ -94,7 +95,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #171717;
+    background-color: #141414;
     border-radius: 10px;
     max-width: 800px;
     color: var(--secondary-white);

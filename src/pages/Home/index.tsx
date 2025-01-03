@@ -7,7 +7,7 @@ import "./Home.css";
 //import { useNavigate } from "react-router-dom"
 
 const Home = (): JSX.Element => {
-  const { kanbanBoards } = useContext(TrelloBoardContext);
+  const { kanbanBoards, isGuest, setIsGuest } = useContext(TrelloBoardContext);
 
   const getUser = async () => {
     const { data: user } = await supabase.auth.getUser();
@@ -20,6 +20,9 @@ const Home = (): JSX.Element => {
 
   const logOut = async () => {
     await supabase.auth.signOut();
+    if(isGuest) {
+      setIsGuest(false);
+    }
   };
   return (
     <>
