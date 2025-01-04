@@ -72,9 +72,9 @@ Welcome to Boardy project! This project is a simplified version of the popular p
 
 ## 🎉 Acknowledgments
 
-A huge thank you to the **Afordin community** for their invaluable guidance and support throughout the development of this project.  
+A huge thank you to the [Afordin community](https://github.com/Afordin) for their invaluable guidance and support throughout the development of this project.  
 
-Special thanks to the **afor_digital Twitch channel** for their insightful feedback and encouragement, which greatly contributed to refining and enhancing Boardy.  
+Special thanks to the [afor_digital](https://www.twitch.tv/afor_digital) Twitch channel for their insightful feedback and encouragement, which greatly contributed to refining and enhancing Boardy.  
 
 ## Authors
 
