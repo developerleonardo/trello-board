@@ -94,7 +94,7 @@ const Login = () => {
         </div>
         <div className="login-info">
           <img
-            src="./trello-board.jpg"
+            src="./onboarding-img.svg"
             alt="app-img"
             className="login-info__img"
           />
