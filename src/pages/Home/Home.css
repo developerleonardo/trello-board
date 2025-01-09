@@ -1,9 +1,0 @@
-.log-out__button {
-    align-self: end;
-    background-color: transparent;
-    color: var(--secondary-white);
-    border: 1px solid var(--grey-200);
-}
-.log-out__button:hover {
-    background-color: var(--grey-600);
-}

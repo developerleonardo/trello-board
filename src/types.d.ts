@@ -2,6 +2,7 @@ type Id = number | string;
 type Priority = 'Low' | 'Medium' | 'High';
 
 export interface BoardType {
+  userId: Id,
   id: Id;
   title: string;
 }

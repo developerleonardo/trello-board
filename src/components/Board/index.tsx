@@ -189,7 +189,6 @@ const Board = (): JSX.Element => {
       return newList;
     });
   };
-  
 
   if (customLists.length === 0) {
     return (
