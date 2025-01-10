@@ -15,6 +15,7 @@ interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
   setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
   editBoard: (id: Id, title: string) => void;
+  deleteBoard: (id: Id) => void;
   lists: Array<ListType>;
   cards: Array<CardType>;
   setLists: Dispatch<SetStateAction<Array<ListType>>>;
@@ -48,6 +49,7 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   kanbanBoards: [],
   setKanbanBoards: () => {},
   editBoard: () => {},
+  deleteBoard: () => {},
   lists: [],
   cards: [],
   setLists: () => {},
@@ -213,6 +215,21 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       }
     }
   };
+
+  // Function to delete a board
+  const deleteBoard = async (id: Id): Promise<void> => {
+    if(!isGuest && !currentUser) return
+    if(isGuest && !currentUser) {
+      try {
+        const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
+        setKanbanBoards(updatedBoards);
+        localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
+        if(updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id);
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
+  }
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
@@ -468,6 +485,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       value={{
         kanbanBoards,
         editBoard,
+        deleteBoard,
         setKanbanBoards,
         lists,
         setLists,

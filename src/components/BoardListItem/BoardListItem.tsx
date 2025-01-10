@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { TrelloBoardContext } from "../Context";
-import { BoardType } from "../types";
+import { TrelloBoardContext } from "../../Context";
+import { BoardType } from "../../types";
 import { MdEdit } from "react-icons/md";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import { FaRegTrashAlt } from "react-icons/fa";
 import "./BoardListItem.css";
 
 interface BoardListItemProps {
@@ -12,9 +14,10 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
   board,
 }: BoardListItemProps) => {
   const { title, id } = board;
-  const { changeCurrentBoard, selectedBoard, editBoard } =
+  const { changeCurrentBoard, selectedBoard, editBoard, deleteBoard } =
     useContext(TrelloBoardContext);
   const [isMouseOver, setIsMouseOver] = useState(false);
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
   const [isActiveBoard, setIsActiveBoard] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [inputValue, setInputValue] = useState<string>(title);
@@ -41,13 +44,23 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
     setIsEditMode(false);
   };
 
+  const handleMouseEnter = () => {
+    setIsMouseOver(true);
+  };
+  const handleMouseLeave = () => {
+    setIsMouseOver(false);
+    setTimeout(() => {
+      setIsOpenMenu(false);
+    }, 500);
+  };
+
   return (
     <li
       key={id}
       className={`list__item list__item--${activeStyle}`}
       onClick={() => changeCurrentBoard(id)}
-      onMouseEnter={() => setIsMouseOver(true)}
-      onMouseLeave={() => setIsMouseOver(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {!isEditMode ? (
         <div className="list__item__name">
@@ -75,14 +88,32 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
       )}
       {isMouseOver && (
         <button
-          className="board-edit-button"
-          onClick={(event) => {
-            event.stopPropagation();
-            setIsEditMode(!isEditMode);
-          }}
+          className="options-menu-button"
+          onMouseEnter={() => setIsOpenMenu(true)}
         >
-          <MdEdit className="edit-icon" />
+          <HiOutlineDotsHorizontal className="option-icon" />
         </button>
+      )}
+      {isOpenMenu && (
+        <div className="options-menu">
+          <button
+            className="board-menu__options"
+            onClick={(event) => {
+              event.stopPropagation();
+              setIsEditMode(!isEditMode);
+            }}
+          >
+            <MdEdit className="edit-icon" />
+            <span>Edit</span>
+          </button>
+          <button className="board-menu__options" onClick={(event) => {
+            event.stopPropagation()
+            deleteBoard(id)
+          } }>
+            <FaRegTrashAlt className="edit-icon delete-icon" />
+            <span>Delete</span>
+          </button>
+        </div>
       )}
     </li>
   );

@@ -2,13 +2,15 @@ import { supabase } from "../../supabase/client";
 import { FiChevronsLeft, FiLogOut } from "react-icons/fi";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { CiSearch } from "react-icons/ci";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TrelloBoardContext } from "../../Context";
 import "./Sidebar.css";
-import { BoardListItem } from "../BoardListItem";
+import { BoardListItem } from "../BoardListItem/BoardListItem";
 
 const Sidebar = (): JSX.Element => {
   const { kanbanBoards ,isGuest, setIsGuest, createBoard } = useContext(TrelloBoardContext);
+
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const getUser = async () => {
     const { data: user } = await supabase.auth.getUser();
@@ -26,7 +28,9 @@ const Sidebar = (): JSX.Element => {
     }
   };
 
-
+  const filteredBoards = kanbanBoards.filter((board) => {
+    return board.title.toLowerCase().includes(searchInput.toLowerCase());
+  })
 
   return (
     <aside className="sidebar">
@@ -49,6 +53,8 @@ const Sidebar = (): JSX.Element => {
           type="text"
           placeholder="Search a board"
           className="sidebar__search__input"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
         />
         <CiSearch />
       </div>
@@ -56,7 +62,7 @@ const Sidebar = (): JSX.Element => {
         <h3>Boards</h3>
         <ul className="sidebar__boards__list">
           {
-            kanbanBoards.map((board) => (
+            filteredBoards.map((board) => (
               <BoardListItem key={board.id} board={board} />
             )
             )
