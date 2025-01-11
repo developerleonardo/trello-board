@@ -29,6 +29,17 @@
     height: 20px;
     stroke: var(--white);
 }
+.options-menu {
+    position: fixed;
+    transform: translateX(240px) translateY(70%);
+    width: 150px;
+    background-color: var(--grey-500);
+    z-index: 10;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
 .board-menu__options {
     display: flex;
     align-items: center;
@@ -40,7 +51,7 @@
     padding: 8px 16px;
 }
 .board-menu__options:hover {
-    background-color: var(--grey-500);
+    background-color: var(--grey-300);
 }
 .edit-icon {
     width: 20px;
@@ -67,17 +78,6 @@
     color: var(--black);
     font-size: var(--m);
     font-family: "Open Sans", sans-serif;
-}
-.options-menu {
-    position: fixed;
-    transform: translateX(240px) translateY(70%);
-    width: 150px;
-    background-color: var(--grey-300);
-    z-index: 10;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
 }
 .delete-icon {
     fill: var(--red-100);

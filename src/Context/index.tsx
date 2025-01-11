@@ -19,6 +19,8 @@ interface TrelloBoardContextProps {
   lists: Array<ListType>;
   cards: Array<CardType>;
   setLists: Dispatch<SetStateAction<Array<ListType>>>;
+  isSideBarOpen: boolean;
+  setIsSideBarOpen: Dispatch<SetStateAction<boolean>>;
   createBoard: () => void;
   createList: (id: Id) => void;
   updateTitleList: (title: string, id: Id) => void;
@@ -33,6 +35,8 @@ interface TrelloBoardContextProps {
   deleteCard: (cardId: Id) => void;
   isConfirmationModalOpen: boolean;
   setIsConfirmationModalOpen: Dispatch<SetStateAction<boolean>>;
+  isDeleteBoardModalOpen: boolean;
+  setIsDeleteBoardModalOpen: Dispatch<SetStateAction<boolean>>;
   closeConfirmationModal: () => void;
   isCardEdited: boolean;
   setIsCardEdited: Dispatch<SetStateAction<boolean>>;
@@ -53,6 +57,8 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   lists: [],
   cards: [],
   setLists: () => {},
+  isSideBarOpen: true,
+  setIsSideBarOpen: () => {},
   createBoard: () => {},
   createList: () => {},
   updateTitleList: () => {},
@@ -67,6 +73,8 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   deleteCard: () => {},
   isConfirmationModalOpen: false,
   setIsConfirmationModalOpen: () => {},
+  isDeleteBoardModalOpen: false,
+  setIsDeleteBoardModalOpen: () => {},
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
@@ -91,6 +99,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false);
+  const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [targetListId, setTargetListId] = useState<Id | null>(null);
   const [isCardEdited, setIsCardEdited] = useState(false);
   const [currentUser, setCurrentUser] = useState<Id | null>(null);
@@ -225,6 +235,9 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setKanbanBoards(updatedBoards);
         localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
         if(updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id);
+        const listsToDelete = lists.filter((list) => list.boardId !== id);
+        if (listsToDelete.length > 0) setLists(listsToDelete);
+        setIsDeleteBoardModalOpen(false);
       } catch (error) {
         console.error("error", error);
       }
@@ -489,6 +502,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setKanbanBoards,
         lists,
         setLists,
+        isSideBarOpen,
+        setIsSideBarOpen,
         createBoard,
         createList,
         updateTitleList,
@@ -503,6 +518,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         deleteCard,
         isConfirmationModalOpen,
         setIsConfirmationModalOpen,
+        isDeleteBoardModalOpen,
+        setIsDeleteBoardModalOpen,
         closeConfirmationModal,
         isCardEdited,
         setIsCardEdited,

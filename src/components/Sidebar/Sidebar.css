@@ -1,7 +1,6 @@
 .sidebar {
     height: 100%;
     width: 356px;
-    position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
@@ -112,4 +111,29 @@
 .sidebar__logout__button:hover {
     background-color: var(--grey-300);
     cursor: pointer;
+}
+.sidebar__closed {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+}
+.sidebar__open__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--grey-300);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: var(--white);
+    font-size: var(--lg);
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    cursor: pointer;
+}
+.sidebar__open__button:hover {
+    background-color: var(--grey-400);
 }
