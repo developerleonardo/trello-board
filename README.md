@@ -4,7 +4,7 @@ Welcome to Boardy project! This project is a simplified version of the popular p
 
 ## Screenshots
 
-![image](https://i.imgur.com/IGIt9z1.png)
+![image](https://i.imgur.com/iMNKAox.png)
 ![image](https://i.imgur.com/Q1LYMQX.png)
 
 ## Features
