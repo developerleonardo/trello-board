@@ -9,13 +9,14 @@ import {
 import { BoardType, CardType, Id, ListType } from "../types";
 import { v4 as uuid } from "uuid";
 import { supabase } from "../supabase/client";
-import { fetchBoards, fetchLists, fetchCards } from "../supabaseService";
+import { fetchOrCreateBoards, fetchLists, fetchCards } from "../supabaseService";
 
 interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
   setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
   editBoard: (id: Id, title: string) => void;
   deleteBoard: (id: Id) => void;
+  loading: boolean;
   lists: Array<ListType>;
   cards: Array<CardType>;
   setLists: Dispatch<SetStateAction<Array<ListType>>>;
@@ -52,6 +53,7 @@ interface TrelloBoardContextProps {
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   kanbanBoards: [],
   setKanbanBoards: () => {},
+  loading: true,
   editBoard: () => {},
   deleteBoard: () => {},
   lists: [],
@@ -93,8 +95,9 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     TrelloBoardContextProps["kanbanBoards"]
   >([]);
   const [selectedBoard, setSelectedBoard] = useState<BoardType>(
-    kanbanBoards[0]
+    kanbanBoards[0] || { userId: "", id: "", title: "" }
   );
+  const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
   const [cardToEdit, setCardToEdit] = useState<CardType | null>(null);
@@ -145,12 +148,13 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         // Fetch data for logged-in users
         try {
           const [fetchedBoards, fetchedLists, fetchedCards] = await Promise.all(
-            [fetchBoards(), fetchLists(currentUser), fetchCards(currentUser)]
+            [fetchOrCreateBoards(currentUser), fetchLists(currentUser), fetchCards(currentUser)]
           );
           setKanbanBoards(fetchedBoards);
           setSelectedBoard(fetchedBoards[0]);
           setLists(fetchedLists);
           setCards(fetchedCards);
+          setLoading(false);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -184,6 +188,20 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         title: "New Board", // Set the title of the new board
       };
     };
+    if(currentUser && !isGuest) {
+      const newBoard = generateNewBoard(currentUser);
+      try {
+        const { error } = await supabase.from("boards").insert({
+          id: newBoard.id,
+          title: newBoard.title,
+          userId: currentUser,
+        });
+        if (error) throw error;
+        setKanbanBoards([...kanbanBoards, newBoard]); // Add the new board to the existing boards
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
     if (isGuest && !currentUser) {
       const newBoard = generateNewBoard(uuid());
       try {
@@ -206,6 +224,25 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   // Function to edit a board
   const editBoard = async (id: Id, title: string): Promise<void> => {
     if (!isGuest && !currentUser) return;
+    if(currentUser && !isGuest) {
+      try {
+        const { error } = await supabase
+          .from("boards")
+          .update({ title })
+          .eq("id", id);
+        if (error) throw error;
+        setKanbanBoards((boards) =>
+          boards.map((board) => {
+            if (board.id === id) {
+              return { ...board, title }; // Update the title if the ID matches
+            }
+            return board; // Return the board unchanged if the ID does not match
+          })
+        );
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
     if (!currentUser && isGuest) {
       try {
         const updatedBoards = kanbanBoards.map((board) => {
@@ -229,6 +266,21 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   // Function to delete a board
   const deleteBoard = async (id: Id): Promise<void> => {
     if(!isGuest && !currentUser) return
+    if(currentUser && !isGuest) {
+      try {
+        const { error } = await supabase.from("boards").delete().eq("id", id);
+        if (error) throw error;
+        setKanbanBoards((prevBoards) => {
+          const updatedBoards = prevBoards.filter((board) => board.id !== id);
+          return updatedBoards;
+        });
+        const listsToDelete = lists.filter((list) => list.boardId !== id);
+        if (listsToDelete.length > 0) setLists(listsToDelete);
+        setIsDeleteBoardModalOpen(false);
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
     if(isGuest && !currentUser) {
       try {
         const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
@@ -254,7 +306,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         userId,
         boardId,
         id: uuid(), // Generate a unique ID for the new list
-        title: `List ${lists.length + 1}`, // Set the title of the new list
+        title: "New List", // Set the title of the new list
         order: newOrder, // Set the order of the
       };
     };
@@ -500,6 +552,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         editBoard,
         deleteBoard,
         setKanbanBoards,
+        loading,
         lists,
         setLists,
         isSideBarOpen,
