@@ -189,16 +189,15 @@ const Board = (): JSX.Element => {
       return newList;
     });
   };
-  
 
   if (customLists.length === 0) {
     return (
-      <>
+      <main className="board">
         <h1 className="title">{title}</h1>
         <Layout>
           <EmptyState selectedBoard={selectedBoard} />
         </Layout>
-      </>
+      </main>
     );
   }
   return (

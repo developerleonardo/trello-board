@@ -9,6 +9,7 @@
     font-weight: 700;
     letter-spacing: 0.05em;
     text-align: center;
+    margin-top: 60px;
   }
   .add-list-button {
     display: flex;

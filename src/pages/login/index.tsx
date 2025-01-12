@@ -42,12 +42,13 @@ const Login = () => {
       {
         id: '1',
         title: "TRELLO BOARD",
+        userId: "user1",
       },
     ]);
     setLists([
       {
         boardId: '1',
-        userId: uuid(),
+        userId: "user1",
         id: 'list1', // Generate a unique ID for the new list
         title: "List 1", // Set the title of the new list
         order: 0, // Set the order of the new list

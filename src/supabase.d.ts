@@ -38,6 +38,7 @@ export type Database = {
         Row: {
           id: number | string
           title: string
+          userId: number | string
         }
         Insert: {
           id?: number | string

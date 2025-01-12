@@ -1,0 +1,84 @@
+.list__item {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 5px;
+    padding: 8px 4px;
+    cursor: pointer;
+}
+.list__item:hover {
+    background-color: var(--grey-300);
+}
+.list__item__name {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.options-menu-button {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding-right: 4px;
+}
+.option-icon {
+    width: 20px;
+    height: 20px;
+    stroke: var(--white);
+}
+.options-menu {
+    position: fixed;
+    transform: translateX(240px) translateY(70%);
+    width: 150px;
+    background-color: var(--grey-500);
+    z-index: 10;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.board-menu__options {
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    gap: 12px;
+    color: var(--white);
+    padding: 8px 16px;
+}
+.board-menu__options:hover {
+    background-color: var(--grey-300);
+}
+.edit-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--white);
+}
+.confirm-icon {
+    width: 16px;
+    height: 16px;
+    fill: var(--light-green);
+    padding-right: 2px;
+}
+.edit-icon:hover {
+    cursor: pointer;
+}
+.list__item--active {
+    background-color: var(--grey-300);
+}
+.board-edit-input {
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    background-color: var(--grey-300);
+    color: var(--black);
+    font-size: var(--m);
+    font-family: "Open Sans", sans-serif;
+}
+.delete-icon {
+    fill: var(--red-100);
+}
