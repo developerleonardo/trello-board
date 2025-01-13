@@ -94,9 +94,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [kanbanBoards, setKanbanBoards] = useState<
     TrelloBoardContextProps["kanbanBoards"]
   >([]);
-  const [selectedBoard, setSelectedBoard] = useState<BoardType>(
-    kanbanBoards[0] || { userId: "", id: "", title: "" }
-  );
+  const [selectedBoard, setSelectedBoard] = useState<BoardType>(kanbanBoards[0]);
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
@@ -198,6 +196,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         });
         if (error) throw error;
         setKanbanBoards([...kanbanBoards, newBoard]); // Add the new board to the existing boards
+        if(!selectedBoard) setSelectedBoard(newBoard);
       } catch (error) {
         console.error("error", error);
       }
@@ -208,6 +207,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         const updatedBoards = [...kanbanBoards, newBoard];
         setKanbanBoards(updatedBoards); // Add the new board to the existing boards
         localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
+        if(!selectedBoard) setSelectedBoard(newBoard);
       } catch (error) {
         console.error("error", error);
       }
@@ -249,12 +249,11 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
           if (board.id === id) {
             return { ...board, title }; // Update the title if the ID matches
           }
-          // Synchronize selectedBoard if it's the one being edited
-          if (selectedBoard.id === id) {
-            setSelectedBoard({ ...selectedBoard, title });
-          }
           return board; // Return the board unchanged if the ID does not match
         });
+        if (selectedBoard.id === id) {
+          setSelectedBoard({ ...selectedBoard, title });
+        }
         setKanbanBoards(updatedBoards);
         localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
       } catch (error) {

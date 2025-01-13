@@ -12,6 +12,7 @@
     height: 100%;
     display: grid;
     grid-template-rows: 40px 1fr;
+    max-height: 650px;
 }
 .login-header-container {
     width: 370px;

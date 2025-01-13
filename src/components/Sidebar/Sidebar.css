@@ -137,3 +137,25 @@
 .sidebar__open__button:hover {
     background-color: var(--grey-400);
 }
+.no-boards {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    place-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 24px;
+}
+.no-boards h3 {
+    margin: 0;
+    font-size: var(--m);
+    font-weight: 700;
+    color: var(--white);
+}
+.no-boards__description {
+    font-size: var(--m);
+    color: var(--grey-100);
+}

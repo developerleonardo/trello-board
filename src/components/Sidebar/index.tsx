@@ -8,8 +8,14 @@ import { FiChevronsLeft, FiLogOut, FiChevronsRight } from "react-icons/fi";
 import "./Sidebar.css";
 
 const Sidebar = (): JSX.Element => {
-  const { kanbanBoards, isGuest, setIsGuest, createBoard, isSideBarOpen, setIsSideBarOpen } =
-    useContext(TrelloBoardContext);
+  const {
+    kanbanBoards,
+    isGuest,
+    setIsGuest,
+    createBoard,
+    isSideBarOpen,
+    setIsSideBarOpen,
+  } = useContext(TrelloBoardContext);
 
   const [searchInput, setSearchInput] = useState<string>("");
 
@@ -35,7 +41,7 @@ const Sidebar = (): JSX.Element => {
 
   return (
     <>
-      {isSideBarOpen && 
+      {isSideBarOpen && (
         <aside className="sidebar">
           <div className="sidebar__header">
             <div className="sidebar__header__logo">
@@ -64,9 +70,16 @@ const Sidebar = (): JSX.Element => {
           <div className="sidebar__boards">
             <h3>Boards</h3>
             <ul className="sidebar__boards__list">
-              {filteredBoards.map((board) => (
-                <BoardListItem key={board.id} board={board} />
-              ))}
+              {filteredBoards.length > 0 &&
+                filteredBoards.map((board) => (
+                  <BoardListItem key={board.id} board={board} />
+                ))}
+              {filteredBoards.length === 0 && (
+                <div className="no-boards">
+                  <h3 className="no-boards__title">No boards available</h3>
+                  <p className="no-boards__description">Create a new board or check your filters</p>
+                </div>
+              )}
             </ul>
           </div>
           <button className="button sidebar__logout__button" onClick={logOut}>
@@ -74,15 +87,17 @@ const Sidebar = (): JSX.Element => {
             <span>Log Out</span>
           </button>
         </aside>
-      }
-      {
-        !isSideBarOpen &&
+      )}
+      {!isSideBarOpen && (
         <aside className="sidebar__closed">
-          <button onClick={() => setIsSideBarOpen(true)} className="sidebar__open__button">
+          <button
+            onClick={() => setIsSideBarOpen(true)}
+            className="sidebar__open__button"
+          >
             <FiChevronsRight />
           </button>
         </aside>
-      }
+      )}
     </>
   );
 };
