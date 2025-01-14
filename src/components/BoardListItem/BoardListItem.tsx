@@ -50,9 +50,6 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
   };
   const handleMouseLeave = () => {
     setIsMouseOver(false);
-    setTimeout(() => {
-      setIsOpenMenu(false);
-    }, 200);
   };
 
   return (
@@ -90,12 +87,20 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
       {isMouseOver && (
         <button
           className="options-menu-button"
-          onMouseEnter={() => setIsOpenMenu(true)}
+          onClick={(event) => {
+            event.stopPropagation();
+            setIsOpenMenu(!isOpenMenu);
+          }}
         >
           <HiOutlineDotsHorizontal className="option-icon" />
         </button>
       )}
       {isOpenMenu && (
+        <>
+        <div className="overlay-options-menu" onClick={(event) => {
+            event.stopPropagation();
+            setIsOpenMenu(false);
+          }}></div>
         <div className="options-menu">
           <button
             className="board-menu__options"
@@ -115,6 +120,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
             <span>Delete</span>
           </button>
         </div>
+        </>
       )}
       <ConfirmationDeleteBoard id={id} />
     </li>

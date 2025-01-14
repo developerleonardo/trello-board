@@ -30,7 +30,7 @@
     stroke: var(--white);
 }
 .options-menu {
-    position: fixed;
+    position: absolute;
     transform: translateX(240px) translateY(70%);
     width: 150px;
     background-color: var(--grey-500);
@@ -81,4 +81,14 @@
 }
 .delete-icon {
     fill: var(--red-100);
+}
+.overlay-options-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    display: grid;
+    place-items: center;
 }
