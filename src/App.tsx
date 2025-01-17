@@ -4,8 +4,11 @@ import { Home } from "./pages/Home";
 import { Login } from "./pages/login";
 import { NotFound } from "./pages/NotFound";
 import { supabase } from "./supabase/client";
-import "./App.css";
 import { useContext, useEffect } from "react";
+import { SignUp } from "./pages/SignUp";
+import { ResetPassword } from "./pages/ResetPassword";
+import { UpdatePassword } from "./pages/UpdatePassword";
+import "./App.css";
 
 const AppRoutes = () => {
   const navigate = useNavigate();
@@ -19,10 +22,16 @@ const AppRoutes = () => {
       if (isGuest) {
         navigate("/");
       } else {
-        if (!session && location.pathname !== "/signin") {
-          navigate("/signin");
-        } else if (session && location.pathname === "/signin") {
-          navigate("/");
+        if (!session) {
+          // Allow unauthenticated users to access certain routes
+          if (!["/signin", "/signup", "/recover-password"].includes(location.pathname)) {
+            navigate("/signin");
+          }
+        } else {
+          // Authenticated users are redirected away from auth-related pages
+          if (["/signin", "/signup", "/recover-password"].includes(location.pathname)) {
+            navigate("/");
+          }
         }
       }
     });
@@ -35,6 +44,9 @@ const AppRoutes = () => {
   const routes = useRoutes([
     { path: "/", element: <Home /> },
     { path: "/signin", element: <Login /> },
+    { path: "/signup", element: <SignUp /> },
+    { path: "/recover-password", element: <ResetPassword /> },
+    { path: "/account/update-password", element: <UpdatePassword /> },
     { path: "/*", element: <NotFound /> },
   ]);
 
