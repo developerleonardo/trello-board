@@ -16,7 +16,7 @@ const ResetPassword = () => {
     e.preventDefault();
     try {
       await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "http://localhost:5173/account/update-password",
+        redirectTo: "https://trello-board-gamma.vercel.app/account/update-password",
       });
       setIsSuccessMessageOpen(true);
       setTimeout(() => {
