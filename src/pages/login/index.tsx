@@ -2,18 +2,18 @@ import { useContext, useState } from "react";
 import { Layout } from "../../components/Layout";
 import { supabase } from "../../supabase/client";
 import { TrelloBoardContext } from "../../Context";
-import { SuccessMessage } from "../../components/SuccessMessage";
 import { v4 as uuid } from "uuid";
-import "./login.css";
 import { Link } from "react-router-dom";
+import { ErrorMessage } from "../../components/ErrorMessage";
+import "./login.css";
 
 const Login = () => {
   const {
-    setIsSuccessMessageOpen,
     setIsGuest,
     setKanbanBoards,
     setLists,
     setCards,
+    setIsErrorMessageOpen,
   } = useContext(TrelloBoardContext);
 
   const [email, setEmail] = useState("");
@@ -26,12 +26,12 @@ const Login = () => {
         email,
         password,
       });
-      setIsSuccessMessageOpen(true);
-      setTimeout(() => {
-        setIsSuccessMessageOpen(false);
-      }, 5000);
     } catch (error) {
       console.error("Error sending OTP", error);
+      setIsErrorMessageOpen(true);
+      setTimeout(() => {
+        setIsErrorMessageOpen(false);
+      }, 5000);
     }
   };
 
@@ -140,7 +140,7 @@ const Login = () => {
           </p>
         </div>
       </div>
-      <SuccessMessage />
+      <ErrorMessage />
     </Layout>
   );
 };

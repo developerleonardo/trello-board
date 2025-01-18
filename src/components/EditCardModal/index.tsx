@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { IoIosClose } from "react-icons/io";
 import { TrelloBoardContext } from "../../Context";
-import "./EditCardModal.css";
 import { CardType } from "../../types";
+import "./EditCardModal.css";
 
 // Cambiar el estado a false al darle click al boton de editar o al boton de eliminar
 // Modificar el closeModal para que se ejecute adecuadamente

@@ -48,6 +48,8 @@ interface TrelloBoardContextProps {
   setIsSuccessMessageOpen: Dispatch<SetStateAction<boolean>>;
   isGuest: boolean;
   setIsGuest: Dispatch<SetStateAction<boolean>>;
+  isErrorMessageOpen: boolean;
+  setIsErrorMessageOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
@@ -87,6 +89,8 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   setIsSuccessMessageOpen: () => {},
   isGuest: false,
   setIsGuest: () => {},
+  isErrorMessageOpen: false,
+  setIsErrorMessageOpen: () => {},
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
@@ -106,6 +110,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [isCardEdited, setIsCardEdited] = useState(false);
   const [currentUser, setCurrentUser] = useState<Id | null>(null);
   const [isSuccessMessageOpen, setIsSuccessMessageOpen] = useState(false);
+  const [isErrorMessageOpen, setIsErrorMessageOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -583,6 +588,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setIsSuccessMessageOpen,
         isGuest,
         setIsGuest,
+        isErrorMessageOpen,
+        setIsErrorMessageOpen,
       }}
     >
       {children}

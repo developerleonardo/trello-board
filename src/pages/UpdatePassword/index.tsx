@@ -4,10 +4,12 @@ import { supabase } from "../../supabase/client";
 import { TrelloBoardContext } from "../../Context";
 import { SuccessMessage } from "../../components/SuccessMessage";
 import { useNavigate } from "react-router-dom";
+import { ErrorMessage } from "../../components/ErrorMessage";
 
 const UpdatePassword = () => {
   const {
     setIsSuccessMessageOpen,
+    setIsErrorMessageOpen,
   } = useContext(TrelloBoardContext);
 
   const [password, setPassword] = useState("");
@@ -42,6 +44,10 @@ const UpdatePassword = () => {
       }
     } catch (error) {
       console.error("Error sending OTP", error);
+      setIsErrorMessageOpen(true);
+      setTimeout(() => {
+        setIsErrorMessageOpen(false);
+      }, 5000);
     }
   };
 
@@ -93,6 +99,7 @@ const UpdatePassword = () => {
         </div>
       </div>
       <SuccessMessage />
+      <ErrorMessage />
     </Layout>
   );
 };
