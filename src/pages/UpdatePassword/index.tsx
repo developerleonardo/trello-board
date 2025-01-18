@@ -22,7 +22,7 @@ const UpdatePassword = () => {
 
     if (!accessToken) {
       console.error("Invalid or missing token. Redirecting to login...");
-      setTimeout(() => navigate("/signin"), 3000);
+      navigate("/signin");
       return;
     }
 

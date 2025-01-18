@@ -117,16 +117,27 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       try {
         const { data } = await supabase.auth.getUser();
         const user = data?.user;
-        if (!user) return;
-        setCurrentUser(user.id);
+
         if (user) {
-          setCurrentUser(user.id);
+          setCurrentUser(user.id);  // Set the user id if found
+        } else {
+          console.log("No user found.");
         }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
     };
-    fetchUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session) {
+        fetchUser();
+      }
+    });
+
+    // Cleanup the listener on component unmount
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -147,6 +158,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setSelectedBoard(guestBoards[0]);
         setLists(guestLists);
         setCards(guestCards);
+        setLoading(false);
       } else if (currentUser) {
         // Fetch data for logged-in users
         try {
@@ -163,8 +175,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         }
       }
     };
-
-    fetchAllData();
+    if(currentUser || isGuest) fetchAllData();
   }, [currentUser, isGuest]);
 
   // Save guest data to local storage
@@ -236,14 +247,16 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
           .update({ title })
           .eq("id", id);
         if (error) throw error;
-        setKanbanBoards((boards) =>
-          boards.map((board) => {
-            if (board.id === id) {
-              return { ...board, title }; // Update the title if the ID matches
-            }
-            return board; // Return the board unchanged if the ID does not match
-          })
-        );
+        const updatedBoards = kanbanBoards.map((board) => {
+          if (board.id === id) {
+            return { ...board, title }; // Update the title if the ID matches
+          }
+          return board; // Return the board unchanged if the ID does not match
+        });
+        if (selectedBoard.id === id) {
+          setSelectedBoard({ ...selectedBoard, title });
+        }
+        setKanbanBoards(updatedBoards);
       } catch (error) {
         console.error("error", error);
       }
@@ -267,38 +280,39 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
-  // Function to delete a board
-  const deleteBoard = async (id: Id): Promise<void> => {
-    if(!isGuest && !currentUser) return
-    if(currentUser && !isGuest) {
-      try {
-        const { error } = await supabase.from("boards").delete().eq("id", id);
-        if (error) throw error;
-        setKanbanBoards((prevBoards) => {
-          const updatedBoards = prevBoards.filter((board) => board.id !== id);
-          return updatedBoards;
-        });
-        const listsToDelete = lists.filter((list) => list.boardId !== id);
-        if (listsToDelete.length > 0) setLists(listsToDelete);
-        setIsDeleteBoardModalOpen(false);
-      } catch (error) {
-        console.error("error", error);
-      }
-    }
-    if(isGuest && !currentUser) {
-      try {
-        const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
-        setKanbanBoards(updatedBoards);
-        localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
-        if(updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id);
-        const listsToDelete = lists.filter((list) => list.boardId !== id);
-        if (listsToDelete.length > 0) setLists(listsToDelete);
-        setIsDeleteBoardModalOpen(false);
-      } catch (error) {
-        console.error("error", error);
-      }
+ // Function to delete a board
+const deleteBoard = async (id: Id): Promise<void> => {
+  if (!isGuest && !currentUser) return;
+  if (currentUser && !isGuest) {
+    try {
+      const { error } = await supabase.from("boards").delete().eq("id", id);
+      if (error) throw error;
+      setKanbanBoards((prevBoards) => {
+        const updatedBoards = prevBoards.filter((board) => board.id !== id);
+        if (updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id); // Change current board
+        return updatedBoards;
+      });
+      const listsToDelete = lists.filter((list) => list.boardId !== id);
+      if (listsToDelete.length > 0) setLists(listsToDelete);
+      setIsDeleteBoardModalOpen(false);
+    } catch (error) {
+      console.error("error", error);
     }
   }
+  if (isGuest && !currentUser) {
+    try {
+      const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
+      setKanbanBoards(updatedBoards);
+      localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
+      if (updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id); // Change current board
+      const listsToDelete = lists.filter((list) => list.boardId !== id);
+      if (listsToDelete.length > 0) setLists(listsToDelete);
+      setIsDeleteBoardModalOpen(false);
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
+};
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
