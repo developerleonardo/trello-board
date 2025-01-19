@@ -24,7 +24,7 @@ const AppRoutes = () => {
       } else {
         if (!session) {
           // Allow unauthenticated users to access certain routes
-          if (!["/signin", "/signup", "/recover-password"].includes(location.pathname)) {
+          if (!["/signin", "/signup", "/recover-password", "/account/update-password"].includes(location.pathname)) {
             navigate("/signin");
           }
         } else {

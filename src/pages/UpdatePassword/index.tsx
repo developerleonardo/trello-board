@@ -7,18 +7,16 @@ import { useNavigate } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage";
 
 const UpdatePassword = () => {
-  const {
-    setIsSuccessMessageOpen,
-    setIsErrorMessageOpen,
-  } = useContext(TrelloBoardContext);
+  const { setIsSuccessMessageOpen, setIsErrorMessageOpen } =
+    useContext(TrelloBoardContext);
 
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const accessToken = searchParams.get("access_token");
+    const hashParams = new URLSearchParams(location.hash.slice(1)); // Parse fragment after `#`
+    const accessToken = hashParams.get("access_token");
 
     if (!accessToken) {
       console.error("Invalid or missing token. Redirecting to login...");
@@ -26,15 +24,19 @@ const UpdatePassword = () => {
       return;
     }
 
-    // Optionally, validate the token or session here
-  }, [location.search, navigate]);
+    // You can use the token here if needed or store it in Supabase's session
+  }, [location.hash, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const {error} = await supabase.auth.updateUser({password});
+      const { error } = await supabase.auth.updateUser({ password });
       if (error) {
-        throw error;
+        console.error(error);
+        setIsErrorMessageOpen(true);
+        setTimeout(() => {
+          setIsErrorMessageOpen(false);
+        }, 5000);
       } else {
         setIsSuccessMessageOpen(true);
         setTimeout(() => {
@@ -55,7 +57,6 @@ const UpdatePassword = () => {
     setPassword(e.target.value);
   };
 
-
   return (
     <Layout>
       <div className="login-page">
@@ -66,9 +67,7 @@ const UpdatePassword = () => {
           </header>
           <form className="login-form" onSubmit={handleSubmit}>
             <h2 className="login-title">Update Password</h2>
-            <p className="login-description">
-            Type your new password
-            </p>
+            <p className="login-description">Type your new password</p>
             <label htmlFor="" className="login__label-email">
               Password
             </label>
@@ -104,4 +103,4 @@ const UpdatePassword = () => {
   );
 };
 
-export { UpdatePassword }
+export { UpdatePassword };

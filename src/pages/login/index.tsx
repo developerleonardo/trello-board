@@ -22,10 +22,17 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await supabase.auth.signInWithPassword({
+      const {error} = await supabase.auth.signInWithPassword({
         email,
         password,
       });
+      if(error) {
+        console.error(error);
+        setIsErrorMessageOpen(true)
+        setTimeout(() => {
+          setIsErrorMessageOpen(false);
+        }, 5000);
+      }
     } catch (error) {
       console.error("Error sending OTP", error);
       setIsErrorMessageOpen(true);

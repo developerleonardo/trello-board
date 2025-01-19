@@ -7,23 +7,31 @@ import { Link } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage";
 
 const ResetPassword = () => {
-  const {
-    setIsSuccessMessageOpen,
-    setIsErrorMessageOpen,
-  } = useContext(TrelloBoardContext);
+  const { setIsSuccessMessageOpen, setIsErrorMessageOpen } =
+    useContext(TrelloBoardContext);
 
   const [email, setEmail] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: "https://trello-board-gamma.vercel.app/account/update-password",
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo:
+          "https://trello-board-gamma.vercel.app/account/update-password",
       });
-      setIsSuccessMessageOpen(true);
-      setTimeout(() => {
-        setIsSuccessMessageOpen(false);
-      }, 5000);
+
+      if (error) {
+        console.error(error);
+        setIsErrorMessageOpen(true);
+        setTimeout(() => {
+          setIsErrorMessageOpen(false);
+        }, 5000);
+      } else {
+        setIsSuccessMessageOpen(true);
+        setTimeout(() => {
+          setIsSuccessMessageOpen(false);
+        }, 5000);
+      }
     } catch (error) {
       console.error("Error sending OTP", error);
       setIsErrorMessageOpen(true);
@@ -37,7 +45,6 @@ const ResetPassword = () => {
     setEmail(e.target.value);
   };
 
-
   return (
     <Layout>
       <div className="login-page">
@@ -49,7 +56,8 @@ const ResetPassword = () => {
           <form className="login-form" onSubmit={handleSubmit}>
             <h2 className="login-title">Trouble loggin in?</h2>
             <p className="login-description">
-            Type in your email and we&#39;ll send you a link to reset your password
+              Type in your email and we&#39;ll send you a link to reset your
+              password
             </p>
             <label htmlFor="" className="login__label-email">
               Email
@@ -63,7 +71,7 @@ const ResetPassword = () => {
             />
             <button className="login-button">Send email</button>
             <span className="login__register">
-            Already have an account? <Link to="/signin">Sign in</Link>
+              Already have an account? <Link to="/signin">Sign in</Link>
             </span>
           </form>
         </div>
@@ -89,4 +97,4 @@ const ResetPassword = () => {
   );
 };
 
-export { ResetPassword }
+export { ResetPassword };

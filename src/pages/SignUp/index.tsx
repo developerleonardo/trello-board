@@ -7,10 +7,8 @@ import { Link } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage";
 
 const SignUp = () => {
-  const {
-    setIsSuccessMessageOpen,
-    setIsErrorMessageOpen,
-  } = useContext(TrelloBoardContext);
+  const { setIsSuccessMessageOpen, setIsErrorMessageOpen } =
+    useContext(TrelloBoardContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,17 +16,26 @@ const SignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
-            emailRedirectTo: "http://localhost:5173/",
-        }
+          emailRedirectTo: "http://localhost:5173/",
+        },
       });
-      setIsSuccessMessageOpen(true);
-      setTimeout(() => {
-        setIsSuccessMessageOpen(false);
-      }, 5000);
+
+      if (error) {
+        console.error(error);
+        setIsErrorMessageOpen(true);
+        setTimeout(() => {
+          setIsErrorMessageOpen(false);
+        }, 5000);
+      } else {
+        setIsSuccessMessageOpen(true);
+        setTimeout(() => {
+          setIsSuccessMessageOpen(false);
+        }, 5000);
+      }
     } catch (error) {
       console.error("Error sending OTP", error);
       setIsErrorMessageOpen(true);
@@ -44,8 +51,7 @@ const SignUp = () => {
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
-  }
-
+  };
 
   return (
     <Layout>
@@ -70,9 +76,9 @@ const SignUp = () => {
               onChange={handleEmailChange}
               required
             />
-              <label htmlFor="" className="login__label-email">
-                Password
-              </label>
+            <label htmlFor="" className="login__label-email">
+              Password
+            </label>
             <input
               type="password"
               className="login__email-input"
@@ -82,7 +88,7 @@ const SignUp = () => {
             />
             <button className="login-button">Sign Up</button>
             <span className="login__register">
-            Already have an account? <Link to="/signin">Sign in</Link>
+              Already have an account? <Link to="/signin">Sign in</Link>
             </span>
           </form>
         </div>
@@ -108,4 +114,4 @@ const SignUp = () => {
   );
 };
 
-export { SignUp }
+export { SignUp };
