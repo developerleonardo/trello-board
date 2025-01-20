@@ -146,7 +146,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         // Load guest data from localStorage
         const guestBoards = JSON.parse(
           localStorage.getItem("guestBoards") ||
-            "[{ userId: user1 ,id: '1', title: 'TRELLO BOARD' }]"
+            "[{\"userId\": \"user1\", \"id\": \"1\", \"title\": \"TRELLO BOARD\"}]"
         );
         const guestLists = JSON.parse(
           localStorage.getItem("guestLists") || "[]"
