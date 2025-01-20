@@ -77,6 +77,7 @@ const UpdatePassword = () => {
               placeholder="********"
               onChange={handleEmailChange}
               required
+              minLength={8}
             />
             <button className="login-button">Update password</button>
           </form>

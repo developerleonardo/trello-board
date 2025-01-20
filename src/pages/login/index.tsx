@@ -117,6 +117,7 @@ const Login = () => {
               placeholder="********"
               onChange={handlePasswordChange}
               required
+              minLength={8}
             />
             <button className="login-button">Sign in</button>
             <span className="login__register">
