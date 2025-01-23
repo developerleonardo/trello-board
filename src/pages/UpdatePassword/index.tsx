@@ -15,17 +15,20 @@ const UpdatePassword = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const hashParams = new URLSearchParams(location.hash.slice(1)); // Parse fragment after `#`
+    const hashParams = new URLSearchParams(location.hash.slice(1)); // Parse hash fragment
     const accessToken = hashParams.get("access_token");
-
-    if (!accessToken) {
+  
+    if (accessToken) {
+      // Clear the session to prevent automatic login
+      supabase.auth.signOut().catch(console.error);
+  
+      // Optionally validate or use the token for password update
+    } else {
       console.error("Invalid or missing token. Redirecting to login...");
       navigate("/signin");
-      return;
     }
-
-    // You can use the token here if needed or store it in Supabase's session
   }, [location.hash, navigate]);
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

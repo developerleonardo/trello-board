@@ -4,8 +4,8 @@ import { BoardType } from "../../types";
 import { MdEdit } from "react-icons/md";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { FaRegTrashAlt } from "react-icons/fa";
-import "./BoardListItem.css";
 import { ConfirmationDeleteBoard } from "../ConfirmationDeleteBoard";
+import "./BoardListItem.css";
 
 interface BoardListItemProps {
   board: BoardType;
@@ -15,7 +15,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
   board,
 }: BoardListItemProps) => {
   const { title, id } = board;
-  const { changeCurrentBoard, selectedBoard, editBoard, setIsDeleteBoardModalOpen } =
+  const { changeCurrentBoard, selectedBoard, editBoard, openConfirmationBoardModal } =
     useContext(TrelloBoardContext);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -114,7 +114,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
           </button>
           <button className="board-menu__options" onClick={(event) => {
             event.stopPropagation()
-            setIsDeleteBoardModalOpen(true)
+            openConfirmationBoardModal(id)
           } }>
             <FaRegTrashAlt className="edit-icon delete-icon" />
             <span>Delete</span>
@@ -122,7 +122,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
         </div>
         </>
       )}
-      <ConfirmationDeleteBoard id={id} />
+      <ConfirmationDeleteBoard />
     </li>
   );
 };

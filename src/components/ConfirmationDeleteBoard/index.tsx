@@ -3,22 +3,17 @@ import { TrelloBoardContext } from "../../Context";
 import { IoAlertCircleOutline } from "react-icons/io5";
 import "./ConfirmationDeleteBoard.css";
 
-type ConfirmationDeleteBoardProps = {
-    id: string | number;
-}
 
-const ConfirmationDeleteBoard = ({id}: ConfirmationDeleteBoardProps): JSX.Element    => {
+const ConfirmationDeleteBoard = (): JSX.Element    => {
 
-const {isDeleteBoardModalOpen , setIsDeleteBoardModalOpen, deleteBoard} = useContext(TrelloBoardContext)
+const {isDeleteBoardModalOpen , closeConfirmationBoardModal, deleteBoard, targetBoardId} = useContext(TrelloBoardContext)
 
-const closeConfirmationModal = (): void => {
-    setIsDeleteBoardModalOpen(false);
-}
+
 
   return (
     <>
       {isDeleteBoardModalOpen && (
-        <div className="overlay" onClick={closeConfirmationModal}>
+        <div className="overlay" onClick={closeConfirmationBoardModal}>
           <dialog
             className="confirmation-modal"
             onClick={(event) => event.stopPropagation()}
@@ -37,13 +32,16 @@ const closeConfirmationModal = (): void => {
             <div className="confirmation-modal__buttons">
               <button
                 className="button cancel-button"
-                onClick={closeConfirmationModal}
+                onClick={closeConfirmationBoardModal}
               >
                 Cancel
               </button>
               <button
                 className="button button--delete"
-                onClick={() => deleteBoard(id)}
+                onClick={() => {
+                  if(targetBoardId)
+                  deleteBoard(targetBoardId)
+                } }
               >
                 Delete
               </button>

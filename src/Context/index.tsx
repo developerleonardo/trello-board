@@ -27,6 +27,9 @@ interface TrelloBoardContextProps {
   updateTitleList: (title: string, id: Id) => void;
   deleteList: (id: Id) => void;
   targetListId: Id | null;
+  targetBoardId: Id | null;
+  openConfirmationBoardModal: (id: Id) => void;
+  closeConfirmationBoardModal: () => void;
   openConfirmationModal: (id: Id) => void;
   addCards: (listId: Id) => void;
   editCard: (card: CardType) => void;
@@ -37,7 +40,6 @@ interface TrelloBoardContextProps {
   isConfirmationModalOpen: boolean;
   setIsConfirmationModalOpen: Dispatch<SetStateAction<boolean>>;
   isDeleteBoardModalOpen: boolean;
-  setIsDeleteBoardModalOpen: Dispatch<SetStateAction<boolean>>;
   closeConfirmationModal: () => void;
   isCardEdited: boolean;
   setIsCardEdited: Dispatch<SetStateAction<boolean>>;
@@ -68,6 +70,9 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   updateTitleList: () => {},
   deleteList: () => {},
   targetListId: null,
+  targetBoardId: null,
+  openConfirmationBoardModal: () => {},
+  closeConfirmationBoardModal: () => {},
   openConfirmationModal: () => {},
   addCards: () => {},
   editCard: () => {},
@@ -78,7 +83,6 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   isConfirmationModalOpen: false,
   setIsConfirmationModalOpen: () => {},
   isDeleteBoardModalOpen: false,
-  setIsDeleteBoardModalOpen: () => {},
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
@@ -107,6 +111,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [isDeleteBoardModalOpen, setIsDeleteBoardModalOpen] = useState(false);
   const [isSideBarOpen, setIsSideBarOpen] = useState(true);
   const [targetListId, setTargetListId] = useState<Id | null>(null);
+  const [targetBoardId, setTargetBoardId] = useState<Id | null>(null);
   const [isCardEdited, setIsCardEdited] = useState(false);
   const [currentUser, setCurrentUser] = useState<Id | null>(null);
   const [isSuccessMessageOpen, setIsSuccessMessageOpen] = useState(false);
@@ -313,6 +318,18 @@ const deleteBoard = async (id: Id): Promise<void> => {
     }
   }
 };
+
+// Function to open confirmation Board modal
+const openConfirmationBoardModal = (id: Id): void => {
+  setTargetBoardId(id);
+  setIsDeleteBoardModalOpen(true);
+}
+
+// Close confirmation Board modal
+const closeConfirmationBoardModal = (): void => {
+  setTargetBoardId(null);
+  setIsDeleteBoardModalOpen(false);
+}
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
@@ -587,10 +604,12 @@ const deleteBoard = async (id: Id): Promise<void> => {
         setCardToEdit,
         sendCardToEdit,
         deleteCard,
+        targetBoardId,
+        openConfirmationBoardModal,
+        closeConfirmationBoardModal,
         isConfirmationModalOpen,
         setIsConfirmationModalOpen,
         isDeleteBoardModalOpen,
-        setIsDeleteBoardModalOpen,
         closeConfirmationModal,
         isCardEdited,
         setIsCardEdited,
