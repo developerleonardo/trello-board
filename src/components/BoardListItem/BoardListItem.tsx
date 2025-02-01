@@ -15,7 +15,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
   board,
 }: BoardListItemProps) => {
   const { title, id } = board;
-  const { changeCurrentBoard, selectedBoard, editBoard, openConfirmationBoardModal } =
+  const { changeCurrentBoard, selectedBoard, editBoard, openConfirmationBoardModal, isSideBarOpen } =
     useContext(TrelloBoardContext);
   const [isMouseOver, setIsMouseOver] = useState(false);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -61,7 +61,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
       onMouseLeave={handleMouseLeave}
     >
       {!isEditMode ? (
-        <div className="list__item__name">
+        <div className={isSideBarOpen ? `list__item__name` : `list__item__name--closed`}>
           <span>🐹</span>
           <span>{title}</span>
         </div>
@@ -84,7 +84,7 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
           />
         </div>
       )}
-      {isMouseOver && (
+      {isMouseOver && isSideBarOpen && (
         <button
           className="options-menu-button"
           onClick={(event) => {

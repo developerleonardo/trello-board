@@ -1,13 +1,14 @@
 import { Id, ListType } from "../../types";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { RxDragHandleDots2 } from "react-icons/rx";
-import "./List.css";
 import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { useContext, useMemo, useState } from "react";
 import { Card } from "../Card";
 import { TrelloBoardContext } from "../../Context";
 import { ConfirmationModal } from "../ConfirmationModal";
+import { MdAddBox } from "react-icons/md";
+import "./List.css";
 
 interface ListProps {
   list: ListType;
@@ -112,6 +113,7 @@ const List: React.FC<ListProps> = ({ list }: ListProps) => {
             </span>
           </div>
           <button className="add-list__button" onClick={() => addCards(id)}>
+            <MdAddBox />
             Add a new card
           </button>
         </div>

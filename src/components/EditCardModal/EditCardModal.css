@@ -1,5 +1,5 @@
 .overlay {
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.9);
     left: 0;
     top: 0;
     right: 0;
@@ -20,7 +20,7 @@
     z-index: 11;
     border-radius: 10px;
     color: var(--secondary-white);
-    border: none;
+    border: 2px solid var(--grey-600);
     position: relative;
 }
 .edit-card__close-mark {
@@ -30,7 +30,7 @@
     width: 32px;
     height: 32px;
     cursor: pointer;
-    fill: var(--grey-200);
+    fill: var(--grey-100);
 }
 .edit-card__close-mark:hover {
     fill: var(--white);
@@ -58,12 +58,14 @@
 .input {
     width: 100%;
     height: 40px;
-    padding-left: 5px;
-    border-radius: 3px;
+    padding: 8px;
+    border-radius: 8px;
     border: 1px solid var(--grey-600);
     background-color: var(--grey-700);
     color: var(--secondary-white);
     font-family: "Open Sans", sans-serif;
+    font-size: var(--m);
+    font-weight: 100;
 }
 .title-label {
     grid-area: title;
@@ -84,9 +86,11 @@
     background-color: var(--grey-700);
     color: var(--secondary-white);
     resize: none;
-    padding: 5px;
+    padding: 8px;
     font-family: "Open Sans", sans-serif;
-    border-radius: 3px;
+    font-size: var(--m);
+    border-radius: 8px;
+    font-weight: 100;
 }
 .description-input::placeholder {
     color: var(--grey-100);
@@ -124,7 +128,7 @@
 }
 .delete-button {
     color: var(--red-200);
-    background-color: #1a1a1a;
+    background-color: #362727;
     border: none;
     border-radius: 5px;
     display: flex;
@@ -149,6 +153,7 @@
     background-color: transparent;
     color: var(--secondary-white);
     border: 1px solid var(--grey-200);
+    flex-grow: 1;
 }
 .cancel-button:hover {
     background-color: var(--grey-600);
@@ -164,4 +169,7 @@
     color: var(--white);
     border: 1px solid var(--grey-200);
     transition: 0.3s;
+}
+label {
+    font-size: var(--sm);
 }

@@ -30,6 +30,7 @@ body {
   min-width: 100%;
   width: fit-content;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 body::before {
   content: "";

@@ -16,6 +16,13 @@
     align-items: center;
     gap: 12px;
 }
+.list__item__name--closed {
+    display: flex;
+    align-items: center;
+}
+.list__item__name--closed span:nth-child(2) {
+    display: none;
+}
 .options-menu-button {
     display: flex;
     align-items: center;
@@ -38,7 +45,8 @@
     border-radius: 5px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    border: 1px solid var(--grey-200);
+    padding: 4px;
 }
 .board-menu__options {
     display: flex;
@@ -49,20 +57,15 @@
     gap: 12px;
     color: var(--white);
     padding: 8px 16px;
+    border-radius: 2px;
 }
 .board-menu__options:hover {
     background-color: var(--grey-300);
 }
 .edit-icon {
-    width: 20px;
-    height: 20px;
-    fill: var(--white);
-}
-.confirm-icon {
     width: 16px;
     height: 16px;
-    fill: var(--light-green);
-    padding-right: 2px;
+    fill: var(--white);
 }
 .edit-icon:hover {
     cursor: pointer;
@@ -81,6 +84,8 @@
 }
 .delete-icon {
     fill: var(--red-100);
+    width: 14px;
+    height: 14px;
 }
 .overlay-options-menu {
     position: fixed;

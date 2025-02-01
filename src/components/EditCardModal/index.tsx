@@ -108,12 +108,12 @@ const EditCardModal = (): JSX.Element => {
                 <option value="Low">Low</option>
               </select>
               <div className="edit-card__form-buttons">
-                <button className="button delete-button" onClick={() => deleteCard(cardToEdit.id)}>
+                <button type="button" className="button delete-button" onClick={() => deleteCard(cardToEdit.id)}>
                   <FaRegTrashAlt className="delete-button__icon" />
                   <span>Delete</span>
                 </button>
                 <div className="buttons">
-                  <button className="button cancel-button" onClick={closeDialog}>Cancel</button>
+                  <button type="button" className="button cancel-button" onClick={closeDialog}>Cancel</button>
                   <button type="submit" className="button save-button">
                     Save
                   </button>

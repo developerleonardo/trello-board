@@ -5,9 +5,16 @@
     top: 0;
     left: 0;
     background-color: var(--grey-700);
-    padding: 40px;
+    padding: 40px 16px 16px;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    position: relative;
+    transition: width 0.3s;
+}
+.sidebar--closed {
+    width: 48px;
+    padding: 40px 8px 16px;
     align-items: center;
 }
 .sidebar__header {
@@ -24,6 +31,12 @@
     gap: 12px;
     justify-content: center;
 }
+.boardy__logo {
+    margin-top: 6px;
+    width: 18px;
+    height: 18px;
+    margin-bottom: 32px;
+}
 .sidebar__header__logo img {
     width: 18px;
     height: 18px;
@@ -36,34 +49,97 @@
     font-weight: 700;
     letter-spacing: 0.05em;
 }
+.add__board__button--closed {
+    width: 100%;
+    height: 32px;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 24px;
+    border-radius: 5px;
+    display: grid;
+    place-items: center;
+}
+.add__board__button--closed:hover {
+    background-color: var(--grey-300);
+    cursor: pointer;
+}
+.add__board__button--closed svg {
+    width: 24px;
+    height: 24px;
+    stroke: var(--white);
+}
+.sidebar__search__button--closed {
+    width: 100%;
+    height: 32px;
+    border-radius: 5px;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 55px;
+}
+.sidebar__search__button--closed:hover {
+    background-color: var(--grey-300);
+    cursor: pointer;
+}
+.sidebar__search__button--closed svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--white);
+}
 .sidebar__header__icons {
-    display: flex;
-    gap: 12px;
+    position: absolute;
+    right: -32px;
+    top: 40px;
 }
 .sidebar__header__icons button {
     background-color: transparent;
     border: none;
     display: grid;
     place-items: center;
+    padding: 6px;
+    border-radius: 5px;
 }
 .sidebar__header__icons svg {
-    width: 24px;
-    height: 24px;
+    width: 18px;
+    height: 18px;
     stroke: var(--white);
 }
 .sidebar__header__icons button:hover {
-    background-color: var(--grey-300);
+    background-color: var(--grey-400);
     cursor: pointer;
+}
+.add__board__button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 8px;
+    background-color: #3f3f3f;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    color: var(--white);
+    font-size: var(--md);
+    font-weight: 400;
+    letter-spacing: 0.05em;
+    margin-bottom: 16px;
+    cursor: pointer;
+}
+.add__board__button svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--white);
+}
+.add__board__button:hover {
+    background-color: #4f4f4f;
 }
 .sidebar__search {
     width: 100%;
     display: flex;
     position: relative;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
 }
 .sidebar__search__input {
     width: 100%;
-    background-color: var(--grey-300);
+    background-color: #333334;
     border: none;
     border-radius: 5px;
     padding: 12px;
@@ -89,7 +165,7 @@
 .sidebar__boards h3 {
     font-size: var(--lg);
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 .sidebar__boards__list {
     display: flex;
@@ -111,30 +187,14 @@
     background-color: var(--grey-300);
     cursor: pointer;
 }
-.sidebar__closed {
+.sidebar__boards__list--closed {
     display: flex;
     flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    list-style: none;
     align-items: center;
-    width: 40px;
-}
-.sidebar__open__button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: var(--grey-300);
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    color: var(--white);
-    font-size: var(--lg);
-    position: absolute;
-    top: 60px;
-    left: 20px;
-    cursor: pointer;
-}
-.sidebar__open__button:hover {
-    background-color: var(--grey-400);
+    flex-grow: 1;
 }
 .no-boards {
     width: 100%;
@@ -157,4 +217,32 @@
 .no-boards__description {
     font-size: var(--m);
     color: var(--grey-100);
+}
+.emoji__board {
+    width: 100%;
+    height: 32px;
+    display: grid;
+    place-items: center;
+}
+.emoji__board:hover {
+    background-color: var(--grey-300);
+    cursor: pointer;
+}
+.sidebar__logout__button--closed {
+    width: 100%;
+    height: 32px;
+    background-color: transparent;
+    border: none;
+    display: grid;
+    place-items: center;
+}
+.sidebar__logout__button--closed:hover {
+    background-color: var(--grey-300);
+    cursor: pointer;
+}
+.sidebar__logout__button--closed svg {
+    stroke: var(--white);
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
 }
