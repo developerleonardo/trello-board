@@ -16,3 +16,91 @@
     color: var(--secondary-white);
     gap: 24px;
 }
+.empty-state__no-boards {
+    width: 410px;
+    height: 273px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+.empty-state__no-boards-card {
+    width: 100%;
+    height: 178px;
+    background-color: #424244;
+    position: absolute;
+    bottom: 0;
+    border-radius: 10px;
+    padding: 24px;
+}
+.empty-state__no-boards-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.empty-state__no-boards-card__header div:nth-child(1) {
+    background-color: #636365;
+    width: 240px;
+    height: 36px;
+    border-radius: 4px;
+}
+.empty-state__no-boards-card__header div:nth-child(2) {
+    background-color: #636365;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+}
+.empty-state__no-boards-card__content {
+    width: 100%;
+    height: 36px;
+    background-color: #535355;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+.empty-state__no-boards-card__footer {
+    width: 100px;
+    height: 36px;
+    background-color: #535355;
+    border-radius: 8px;
+}
+.empty-state__no-boards-card--large {
+    z-index: 3;
+}
+.empty-state__no-boards-card--medium {
+    z-index: 2;
+    transform: scale(0.9) translateY(-50px);
+    background-color: #373639;
+}
+.empty-state__no-boards-card--small {
+    z-index: 1;
+    transform: scale(0.8) translateY(-100px);
+    background-color: #302f32;
+}
+@media (width <= 800px) {
+    .empty-board {
+        gap: 16px;
+    }
+    .empty-state__no-boards {
+        width: 100%;
+        height: 100%;
+    }
+    .empty-state__no-boards-card {
+        width: 100%;
+        height: 178px;
+    }
+    .empty-state__no-boards-card__header div:nth-child(1) {
+        width: 200px;
+        height: 36px;
+    }
+    .empty-state__no-boards-card__header div:nth-child(2) {
+        width: 36px;
+        height: 36px;
+    }
+    .empty-state__no-boards-card__content {
+        height: 36px;
+    }
+    .empty-state__no-boards-card__footer {
+        width: 80px;
+        height: 36px;
+    }
+}

@@ -21,7 +21,18 @@ const Home = (): JSX.Element => {
           <Sidebar />
           {kanbanBoards.length === 0 ? (
             <div className="empty-board">
-              <img src="./empty-state.svg" alt="empty state image" />
+              <div className="empty-state__no-boards">
+                <div className="empty-state__no-boards-card empty-state__no-boards-card--large">
+                  <div className="empty-state__no-boards-card__header">
+                    <div></div>
+                    <div></div>
+                  </div>
+                  <div className="empty-state__no-boards-card__content"></div>
+                  <div className="empty-state__no-boards-card__footer"></div>
+                </div>
+                <div className="empty-state__no-boards-card empty-state__no-boards-card--medium"></div>
+                <div className="empty-state__no-boards-card empty-state__no-boards-card--small"></div>
+              </div>
               <h1 className="empty-state__title">
                 Get Started by Creating a New Board
               </h1>

@@ -1,10 +1,10 @@
-import { MdEdit } from "react-icons/md";
-import "./Card.css";
 import { CardType, Priority } from "../../types";
 import { useContext, useState } from "react";
 import { TrelloBoardContext } from "../../Context";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { MdEdit } from "react-icons/md";
+import "./Card.css";
 
 interface CardProps {
   card: CardType;

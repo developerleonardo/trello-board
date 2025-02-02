@@ -23,6 +23,7 @@ html, body {
   min-width: 100%;
   width: fit-content;
   min-height: 100vh;
+  height: fit-content;
 }
 body {
   background: var(--grey-800);
@@ -31,6 +32,7 @@ body {
   width: fit-content;
   min-height: 100vh;
   overflow-x: hidden;
+  height: fit-content;
 }
 body::before {
   content: "";
@@ -61,4 +63,14 @@ body::before {
 .list > ::-webkit-scrollbar-thumb {
   background-color: var(--grey-200);
   border-radius: 4px;
+}
+@media (width <= 800px) {
+  #root {
+    width: 100%;
+    overflow: auto;
+  }
+  body {
+    width: 100%;
+    overflow: auto;
+  }
 }

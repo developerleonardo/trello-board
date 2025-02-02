@@ -173,3 +173,21 @@
 label {
     font-size: var(--sm);
 }
+@media (width <= 800px) {
+    .edit-card {
+        width: 100%;
+    }
+    .edit-card__form {
+        grid-template-columns: 1fr;
+        grid-template-rows: 1fr 20px 1fr 20px 2fr 20px;
+        grid-template-areas: "edit"
+                             "title"
+                             "titleInput"
+                             "description"
+                             "descriptionInput"
+                             "priority"
+                             "priorityInput"
+                             "buttons";
+        gap: 8px;
+    }
+}

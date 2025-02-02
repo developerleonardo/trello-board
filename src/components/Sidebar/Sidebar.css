@@ -246,3 +246,72 @@
     height: 18px;
     border-radius: 5px;
 }
+@media (width <= 800px) {
+    .sidebar {
+        width: 100%;
+        padding: 40px 16px 16px;
+    }
+    .sidebar--closed {
+        width: 100%;
+        padding: 40px 8px 16px;
+    }
+    .sidebar__header__icons button {
+        padding: 8px;
+    }
+    .sidebar__header__icons svg {
+        width: 16px;
+        height: 16px;
+    }
+    .sidebar__header__logo h2 {
+        font-size: var(--lg);
+    }
+    .sidebar__header__logo img {
+        width: 16px;
+        height: 16px;
+    }
+    .sidebar__header__logo {
+        gap: 8px;
+    }
+    .sidebar__header__icons button {
+        padding: 8px;
+    }
+    .sidebar__header__icons svg {
+        width: 16px;
+        height: 16px;
+    }
+    .add__board__button {
+        font-size: var(--sm);
+    }
+    .sidebar__search__input {
+        padding: 8px;
+        font-size: var(--sm);
+    }
+    .sidebar__boards h3 {
+        font-size: var(--md);
+    }
+    .sidebar__boards__list {
+        gap: 12px;
+    }
+    .no-boards h3 {
+        font-size: var(--sm);
+    }
+    .no-boards__description {
+        font-size: var(--sm);
+    }
+    .emoji__board {
+        height: 24px;
+    }
+    .emoji__board:hover {
+        background-color: var(--grey-300);
+    }
+    .sidebar__logout__button {
+        font-size: var(--sm);
+    }
+    .sidebar__logout__button--closed {
+        height: 24px;
+    }
+    .sidebar__logout__button--closed svg {
+        width: 16px;
+        height: 16px;
+    }
+}

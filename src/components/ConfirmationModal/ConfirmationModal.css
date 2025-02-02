@@ -64,3 +64,18 @@
 .button--delete:hover {
     background-color: var(--red-300);
 }   
+@media (width <= 800px) {
+    .confirmation-modal {
+        width: 300px;
+        height: 250px;
+    }
+    .confirmation-modal__title {
+        font-size: var(--md);
+    }
+    .confirmation-modal__paragraph {
+        font-size: var(--sm);
+    }
+    .button--delete {
+        padding: 8px 24px;
+    }
+}
