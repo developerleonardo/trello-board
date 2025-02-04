@@ -5,6 +5,7 @@ export interface BoardType {
   userId: Id,
   id: Id;
   title: string;
+  emoji: string;
 }
 
 export interface ListType {

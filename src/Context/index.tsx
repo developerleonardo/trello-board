@@ -14,7 +14,7 @@ import { fetchOrCreateBoards, fetchLists, fetchCards } from "../supabaseService"
 interface TrelloBoardContextProps {
   kanbanBoards: Array<BoardType>;
   setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
-  editBoard: (id: Id, title: string) => void;
+  editBoard: (id: Id, title: string, emoji: string) => void;
   deleteBoard: (id: Id) => void;
   loading: boolean;
   lists: Array<ListType>;
@@ -86,7 +86,7 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
   closeConfirmationModal: () => {},
   isCardEdited: false,
   setIsCardEdited: () => {},
-  selectedBoard: { userId: "", id: "", title: "" },
+  selectedBoard: { userId: "", id: "", title: "", emoji: "" },
   changeCurrentBoard: () => {},
   setCards: () => {},
   isSuccessMessageOpen: false,
@@ -151,7 +151,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         // Load guest data from localStorage
         const guestBoards = JSON.parse(
           localStorage.getItem("guestBoards") ||
-            "[{\"userId\": \"user1\", \"id\": \"1\", \"title\": \"TRELLO BOARD\"}]"
+            "[{\"userId\": \"user1\", \"id\": \"1\", \"title\": \"TRELLO BOARD\" \"emoji\": \"🐹\"}]"
         );
         const guestLists = JSON.parse(
           localStorage.getItem("guestLists") || "[]"
@@ -205,6 +205,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         userId,
         id: uuid(), // Generate a unique ID for the new board
         title: "New Board", // Set the title of the new board
+        emoji: "🐹", // Set the emoji of the new board
       };
     };
     if(currentUser && !isGuest) {
@@ -214,6 +215,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
           id: newBoard.id,
           title: newBoard.title,
           userId: currentUser,
+          emoji: newBoard.emoji,
         });
         if (error) throw error;
         setKanbanBoards([...kanbanBoards, newBoard]); // Add the new board to the existing boards
@@ -243,23 +245,23 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   // Function to edit a board
-  const editBoard = async (id: Id, title: string): Promise<void> => {
+  const editBoard = async (id: Id, title: string, emoji: string): Promise<void> => {
     if (!isGuest && !currentUser) return;
     if(currentUser && !isGuest) {
       try {
         const { error } = await supabase
           .from("boards")
-          .update({ title })
+          .update({ title, emoji })
           .eq("id", id);
         if (error) throw error;
         const updatedBoards = kanbanBoards.map((board) => {
           if (board.id === id) {
-            return { ...board, title }; // Update the title if the ID matches
+            return { ...board, title, emoji }; // Update the title if the ID matches
           }
           return board; // Return the board unchanged if the ID does not match
         });
         if (selectedBoard.id === id) {
-          setSelectedBoard({ ...selectedBoard, title });
+          setSelectedBoard({ ...selectedBoard, title, emoji });
         }
         setKanbanBoards(updatedBoards);
       } catch (error) {
@@ -270,12 +272,12 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       try {
         const updatedBoards = kanbanBoards.map((board) => {
           if (board.id === id) {
-            return { ...board, title }; // Update the title if the ID matches
+            return { ...board, title, emoji }; // Update the title if the ID matches
           }
           return board; // Return the board unchanged if the ID does not match
         });
         if (selectedBoard.id === id) {
-          setSelectedBoard({ ...selectedBoard, title });
+          setSelectedBoard({ ...selectedBoard, title, emoji });
         }
         setKanbanBoards(updatedBoards);
         localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));

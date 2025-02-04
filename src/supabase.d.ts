@@ -39,6 +39,7 @@ export type Database = {
           id: number | string
           title: string
           userId: number | string
+          emoji: string
         }
         Insert: {
           id?: number | string

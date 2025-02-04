@@ -14,7 +14,7 @@ const fetchBoards = async (currentUser: Id) => {
   const createDefaultBoard = async (currentUser: Id) => {
     const { data, error } = await supabase
       .from('boards')
-      .insert([{ userId: currentUser, id: uuid(), title: 'My First Board' }])
+      .insert([{ userId: currentUser, id: uuid(), title: 'My First Board', emoji: '🐹' }])
       .select()
       .single();
   

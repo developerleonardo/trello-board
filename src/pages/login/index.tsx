@@ -61,6 +61,7 @@ const Login = () => {
         id: "1",
         title: "TRELLO BOARD",
         userId: "user1",
+        emoji: "🐹",
       },
     ]);
     setLists([

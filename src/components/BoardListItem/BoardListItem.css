@@ -67,6 +67,11 @@
     height: 16px;
     fill: var(--white);
 }
+.confirm-icon {
+    width: 20px;
+    height: 20px;
+    fill: var(--light-green);
+}
 .edit-icon:hover {
     cursor: pointer;
 }
@@ -87,15 +92,29 @@
     width: 14px;
     height: 14px;
 }
-.overlay-options-menu {
-    position: fixed;
-    top: 0;
+.emoji-picker__button {
+    background-color: transparent;
+    cursor: pointer;
+    font-size: var(--m);
+    border-radius: 5px;
+    border: 1px solid var(--grey-100);
+    
+}
+.emoji-picker__button:hover {
+    background-color: var(--grey-300);
+}
+.emoji-picker {
+    position: absolute;
+    top: 40px;
     left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 9;
-    display: grid;
-    place-items: center;
+    z-index: 10;
+    background-color: var(--grey-500);
+    border-radius: 5px;
+    padding: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    border: 1px solid var(--grey-200);
 }
 @media (width <= 800px) {
     .options-menu {
