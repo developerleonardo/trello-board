@@ -1,0 +1,82 @@
+.edit__profile__modal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    background-color: var(--grey-800);
+    width: 350px;
+    color: var(--secondary-white);
+    z-index: 11;
+    padding: 24px;
+    margin: 0 auto;
+    border: 1px solid var(--grey-500);
+    text-align: center;
+    border-radius: 10px;
+    z-index: 11;
+}
+.edit__profile__modal h1 {
+    font-size: var(--lg);
+    font-weight: 700;
+    margin-top: 24px;
+    align-self: flex-start;
+    margin-bottom: 24px;
+}
+.edit__profile__form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: fit-content;
+}
+.edit__profile__image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    position: relative;
+    box-shadow: inset 0 0 0 2px hsla(0, 0%, 0%, 0.2);
+}
+.edit__profile__image img {
+    width: 100px;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.edit__profile__image__button {
+    position: absolute;
+    bottom: 0;
+    right: -10px;
+    background-color: var(--grey-100);
+    border: none;
+    border-radius: 50%;
+    padding: 4px;
+    margin: 8px;
+    cursor: pointer;
+}
+.edit__profile__image__button svg {
+    width: 24px;
+    height: 24px;
+}
+.edit__profile__name-label {
+    font-size: var(--sm);
+    font-weight: 700;
+    margin-top: 24px;
+    align-self: flex-start;
+}
+.edit__profile__name {
+    width: 100%;
+    height: 40px;
+    border: 1px solid var(--grey-500);
+    border-radius: 5px;
+    padding: 8px;
+    margin-top: 8px;
+    margin-bottom: 24px;
+    background-color: var(--grey-500);
+    color: var(--secondary-white);
+    font-family: "Open Sans", sans-serif;
+    font-size: var(--m);
+}
+.save__button-edit {
+    flex-grow: 1;
+}

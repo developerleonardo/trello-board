@@ -9,9 +9,18 @@ import {
 import { BoardType, CardType, Id, ListType } from "../types";
 import { v4 as uuid } from "uuid";
 import { supabase } from "../supabase/client";
-import { fetchOrCreateBoards, fetchLists, fetchCards } from "../supabaseService";
+import {
+  fetchOrCreateBoards,
+  fetchLists,
+  fetchCards,
+} from "../supabaseService";
 
 interface TrelloBoardContextProps {
+  userEmail: string | null;
+  username: string | null;
+  updateUsername: (name: string) => void;
+  profileImage: string | null;
+  updateProfileImage: (image: string) => void;
   kanbanBoards: Array<BoardType>;
   setKanbanBoards: Dispatch<SetStateAction<Array<BoardType>>>;
   editBoard: (id: Id, title: string, emoji: string) => void;
@@ -55,6 +64,11 @@ interface TrelloBoardContextProps {
 }
 
 export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
+  userEmail: null,
+  username: null,
+  updateUsername: () => {},
+  profileImage: "",
+  updateProfileImage: () => {},
   kanbanBoards: [],
   setKanbanBoards: () => {},
   loading: true,
@@ -102,7 +116,9 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [kanbanBoards, setKanbanBoards] = useState<
     TrelloBoardContextProps["kanbanBoards"]
   >([]);
-  const [selectedBoard, setSelectedBoard] = useState<BoardType>(kanbanBoards[0]);
+  const [selectedBoard, setSelectedBoard] = useState<BoardType>(
+    kanbanBoards[0]
+  );
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
   const [cards, setCards] = useState<TrelloBoardContextProps["cards"]>([]);
@@ -114,6 +130,9 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [targetBoardId, setTargetBoardId] = useState<Id | null>(null);
   const [isCardEdited, setIsCardEdited] = useState(false);
   const [currentUser, setCurrentUser] = useState<Id | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isSuccessMessageOpen, setIsSuccessMessageOpen] = useState(false);
   const [isErrorMessageOpen, setIsErrorMessageOpen] = useState(false);
 
@@ -122,9 +141,10 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       try {
         const { data } = await supabase.auth.getUser();
         const user = data?.user;
-
         if (user) {
-          setCurrentUser(user.id);  // Set the user id if found
+          setCurrentUser(user.id); // Set the user id if found
+          if (user.email) setUserEmail(user.email); // Set the user email if found
+
         } else {
           console.log("No user found.");
         }
@@ -133,11 +153,13 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       }
     };
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (session) {
-        fetchUser();
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (session) {
+          fetchUser();
+        }
       }
-    });
+    );
 
     // Cleanup the listener on component unmount
     return () => {
@@ -149,9 +171,18 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     const fetchAllData = async () => {
       if (isGuest) {
         // Load guest data from localStorage
+        const storedUsername = JSON.parse(
+          localStorage.getItem("username") || '"Guest"'
+        );
+        const storedUserEmail = JSON.parse(
+          localStorage.getItem("userEmail") || '"youremail@mail.com"'
+        );
+        const storedProfileImage = JSON.parse(
+          localStorage.getItem("profileImage") || '"./blank-profile.png"'
+        );
         const guestBoards = JSON.parse(
           localStorage.getItem("guestBoards") ||
-            "[{\"userId\": \"user1\", \"id\": \"1\", \"title\": \"TRELLO BOARD\" \"emoji\": \"🐹\"}]"
+            '[{"userId": "user1", "id": "1", "title": "TRELLO BOARD", "emoji": "🐹"}]'
         );
         const guestLists = JSON.parse(
           localStorage.getItem("guestLists") || "[]"
@@ -159,6 +190,9 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         const guestCards = JSON.parse(
           localStorage.getItem("guestCards") || "[]"
         );
+        setUsername(storedUsername);
+        setUserEmail(storedUserEmail);
+        setProfileImage(storedProfileImage);
         setKanbanBoards(guestBoards);
         setSelectedBoard(guestBoards[0]);
         setLists(guestLists);
@@ -167,9 +201,21 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       } else if (currentUser) {
         // Fetch data for logged-in users
         try {
-          const [fetchedBoards, fetchedLists, fetchedCards] = await Promise.all(
-            [fetchOrCreateBoards(currentUser), fetchLists(currentUser), fetchCards(currentUser)]
+          const storedUsername = JSON.parse(
+            localStorage.getItem("username") || '"Set Your Name"'
           );
+          const storedProfileImage = JSON.parse(
+            localStorage.getItem("profileImage") || '"./blank-profile.png"'
+          );
+          const [fetchedBoards, fetchedLists, fetchedCards] = await Promise.all(
+            [
+              fetchOrCreateBoards(currentUser),
+              fetchLists(currentUser),
+              fetchCards(currentUser),
+            ]
+          );
+          setUsername(storedUsername);
+          setProfileImage(storedProfileImage);
           setKanbanBoards(fetchedBoards);
           setSelectedBoard(fetchedBoards[0]);
           setLists(fetchedLists);
@@ -180,7 +226,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         }
       }
     };
-    if(currentUser || isGuest) fetchAllData();
+    if (currentUser || isGuest) fetchAllData();
   }, [currentUser, isGuest]);
 
   // Save guest data to local storage
@@ -197,6 +243,27 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     }
   }, [kanbanBoards, lists, cards, isGuest]);
 
+  // Function to update a user's name
+  const updateUsername = async (name: string): Promise<void> => {
+    if(!name.trim()) return;
+    if (isGuest || currentUser) {
+      if (name !== username) {
+        localStorage.setItem("username", JSON.stringify(name));
+        setUsername(name);
+      }
+    }
+  };
+
+  const updateProfileImage = async (image: string): Promise<void> => {
+    if(!image.trim()) return;
+    if (isGuest || currentUser) {
+      if (image !== profileImage) {
+        localStorage.setItem("profileImage", JSON.stringify(image));
+        setProfileImage(image);
+      }
+    }
+  }
+
   // Function to create a new board
   const createBoard = async (): Promise<void> => {
     if (!isGuest && !currentUser) return;
@@ -208,7 +275,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         emoji: "🐹", // Set the emoji of the new board
       };
     };
-    if(currentUser && !isGuest) {
+    if (currentUser && !isGuest) {
       const newBoard = generateNewBoard(currentUser);
       try {
         const { error } = await supabase.from("boards").insert({
@@ -219,7 +286,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         });
         if (error) throw error;
         setKanbanBoards([...kanbanBoards, newBoard]); // Add the new board to the existing boards
-        if(!selectedBoard) setSelectedBoard(newBoard);
+        if (!selectedBoard) setSelectedBoard(newBoard);
       } catch (error) {
         console.error("error", error);
       }
@@ -230,7 +297,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         const updatedBoards = [...kanbanBoards, newBoard];
         setKanbanBoards(updatedBoards); // Add the new board to the existing boards
         localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
-        if(!selectedBoard) setSelectedBoard(newBoard);
+        if (!selectedBoard) setSelectedBoard(newBoard);
       } catch (error) {
         console.error("error", error);
       }
@@ -245,9 +312,13 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   // Function to edit a board
-  const editBoard = async (id: Id, title: string, emoji: string): Promise<void> => {
+  const editBoard = async (
+    id: Id,
+    title: string,
+    emoji: string
+  ): Promise<void> => {
     if (!isGuest && !currentUser) return;
-    if(currentUser && !isGuest) {
+    if (currentUser && !isGuest) {
       try {
         const { error } = await supabase
           .from("boards")
@@ -287,51 +358,51 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
     }
   };
 
- // Function to delete a board
-const deleteBoard = async (id: Id): Promise<void> => {
-  if (!isGuest && !currentUser) return;
-  if (currentUser && !isGuest) {
-    try {
-      const { error } = await supabase.from("boards").delete().eq("id", id);
-      if (error) throw error;
-      setKanbanBoards((prevBoards) => {
-        const updatedBoards = prevBoards.filter((board) => board.id !== id);
+  // Function to delete a board
+  const deleteBoard = async (id: Id): Promise<void> => {
+    if (!isGuest && !currentUser) return;
+    if (currentUser && !isGuest) {
+      try {
+        const { error } = await supabase.from("boards").delete().eq("id", id);
+        if (error) throw error;
+        setKanbanBoards((prevBoards) => {
+          const updatedBoards = prevBoards.filter((board) => board.id !== id);
+          if (updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id); // Change current board
+          return updatedBoards;
+        });
+        const listsToDelete = lists.filter((list) => list.boardId !== id);
+        if (listsToDelete.length > 0) setLists(listsToDelete);
+        setIsDeleteBoardModalOpen(false);
+      } catch (error) {
+        console.error("error", error);
+      }
+    }
+    if (isGuest && !currentUser) {
+      try {
+        const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
+        setKanbanBoards(updatedBoards);
+        localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
         if (updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id); // Change current board
-        return updatedBoards;
-      });
-      const listsToDelete = lists.filter((list) => list.boardId !== id);
-      if (listsToDelete.length > 0) setLists(listsToDelete);
-      setIsDeleteBoardModalOpen(false);
-    } catch (error) {
-      console.error("error", error);
+        const listsToDelete = lists.filter((list) => list.boardId !== id);
+        if (listsToDelete.length > 0) setLists(listsToDelete);
+        setIsDeleteBoardModalOpen(false);
+      } catch (error) {
+        console.error("error", error);
+      }
     }
-  }
-  if (isGuest && !currentUser) {
-    try {
-      const updatedBoards = kanbanBoards.filter((board) => board.id !== id);
-      setKanbanBoards(updatedBoards);
-      localStorage.setItem("guestBoards", JSON.stringify(updatedBoards));
-      if (updatedBoards.length > 0) changeCurrentBoard(updatedBoards[0].id); // Change current board
-      const listsToDelete = lists.filter((list) => list.boardId !== id);
-      if (listsToDelete.length > 0) setLists(listsToDelete);
-      setIsDeleteBoardModalOpen(false);
-    } catch (error) {
-      console.error("error", error);
-    }
-  }
-};
+  };
 
-// Function to open confirmation Board modal
-const openConfirmationBoardModal = (id: Id): void => {
-  setTargetBoardId(id);
-  setIsDeleteBoardModalOpen(true);
-}
+  // Function to open confirmation Board modal
+  const openConfirmationBoardModal = (id: Id): void => {
+    setTargetBoardId(id);
+    setIsDeleteBoardModalOpen(true);
+  };
 
-// Close confirmation Board modal
-const closeConfirmationBoardModal = (): void => {
-  setTargetBoardId(null);
-  setIsDeleteBoardModalOpen(false);
-}
+  // Close confirmation Board modal
+  const closeConfirmationBoardModal = (): void => {
+    setTargetBoardId(null);
+    setIsDeleteBoardModalOpen(false);
+  };
 
   // Function to create a new list
   const createList = async (boardId: Id): Promise<void> => {
@@ -585,6 +656,11 @@ const closeConfirmationBoardModal = (): void => {
   return (
     <TrelloBoardContext.Provider
       value={{
+        userEmail,
+        username,
+        updateUsername,
+        profileImage,
+        updateProfileImage,
         kanbanBoards,
         editBoard,
         deleteBoard,

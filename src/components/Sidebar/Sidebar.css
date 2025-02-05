@@ -246,6 +246,97 @@
     height: 18px;
     border-radius: 5px;
 }
+.sidebar__profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    width: 100%;
+    color: var(--white);
+    border-radius: 5px;
+    padding: 12px;
+    position: relative;
+}
+.sidebar__profile:hover {
+    cursor: pointer;
+    background-color: var(--grey-300);
+}
+.sidebar__profile__figure {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.sidebar__profile__figure img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.sidebar__profile__info {
+    display: flex;
+    flex-direction: column;
+    margin-left: 4px;
+}
+.sidebar__profile__info h4 {
+    font-size: var(--md);
+    font-weight: 700;
+}
+.sidebar__profile__info p {
+    font-size: var(--sm);
+    color: var(--grey-100);
+}
+.sidebar__profile__chevron {
+    background-color: transparent;
+    border: none;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    flex-grow: 1;
+    cursor: pointer;
+}
+.sidebar__profile__chevron svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--white);
+}
+.sidebar__profile__menu {
+    position: absolute;
+    right: -200px;
+    width: 200px;
+    background-color: var(--grey-700);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    z-index: 1;
+}
+.sidebar__profile__closed--container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    margin-bottom: 36px;
+}
+.sidebar__profile--closed {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.sidebar__profile--closed:hover {
+    transform: scale(1.02);
+}
+.sidebar__profile--closed img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+}
 @media (width <= 800px) {
     .sidebar {
         width: 100%;
@@ -313,5 +404,9 @@
     .sidebar__logout__button--closed svg {
         width: 16px;
         height: 16px;
+    }
+    .sidebar__profile__menu {
+        right: -100px;
+        bottom: 70px;
     }
 }
