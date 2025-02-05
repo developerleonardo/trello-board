@@ -114,7 +114,6 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
             value={inputValue}
             onChange={onTitleChange}
             autoFocus
-            //onBlur={onEditBoard}
             onKeyDown={(event) => {
               if (event.key !== "Enter") return;
               if (event.key === "Enter") onEditBoard();
@@ -135,6 +134,12 @@ const BoardListItem: React.FC<BoardListItemProps> = ({
           <HiOutlineDotsHorizontal className="option-icon" />
         </button>
       )}
+      {
+        isMouseOver && !isSideBarOpen && !isEditMode && 
+        <div className="tooltip">
+          <span>{title}</span>
+        </div>
+      }
       { isEditMode && (
         <button
           className="options-menu-button"
