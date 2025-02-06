@@ -21,7 +21,7 @@ const ResetPassword = () => {
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo:
-          "https://trello-board-gamma.vercel.app/account/update-password",
+          "https://boardy-project-gamma.vercel.app/account/update-password",
       });
 
       if (error) {
