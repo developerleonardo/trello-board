@@ -11,7 +11,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdAddBox } from "react-icons/md";
 
 const SignUp = () => {
-  const { setIsSuccessMessageOpen, setIsErrorMessageOpen } =
+  const { setIsSuccessMessageOpen, setIsErrorMessageOpen, setIsGuest } =
     useContext(TrelloBoardContext);
 
   const [email, setEmail] = useState("");
@@ -35,6 +35,7 @@ const SignUp = () => {
           setIsErrorMessageOpen(false);
         }, 5000);
       } else {
+        setIsGuest(false);
         setIsSuccessMessageOpen(true);
         setTimeout(() => {
           setIsSuccessMessageOpen(false);

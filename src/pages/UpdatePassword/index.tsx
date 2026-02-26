@@ -11,7 +11,7 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import { MdAddBox } from "react-icons/md";
 
 const UpdatePassword = () => {
-  const { setIsSuccessMessageOpen, setIsErrorMessageOpen } =
+  const { setIsSuccessMessageOpen, setIsErrorMessageOpen, setIsGuest } =
     useContext(TrelloBoardContext);
 
   const [password, setPassword] = useState("");
@@ -47,6 +47,7 @@ const UpdatePassword = () => {
         setIsSuccessMessageOpen(true);
         setTimeout(() => {
           setIsSuccessMessageOpen(false);
+          setIsGuest(false);
           navigate("/signin");
         }, 3000);
       }

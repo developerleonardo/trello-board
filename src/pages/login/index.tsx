@@ -37,6 +37,9 @@ const Login = () => {
         setTimeout(() => {
           setIsErrorMessageOpen(false);
         }, 5000);
+      } else {
+        setIsGuest(false);
+        navigate("/");
       }
     } catch (error) {
       console.error("Error sending OTP", error);
