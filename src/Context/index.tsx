@@ -112,12 +112,12 @@ export const TrelloBoardContext = createContext<TrelloBoardContextProps>({
 });
 
 export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
-  const [isGuest, setIsGuest] = useState(false);
+  const [isGuest, setIsGuest] = useState(true);
   const [kanbanBoards, setKanbanBoards] = useState<
     TrelloBoardContextProps["kanbanBoards"]
   >([]);
   const [selectedBoard, setSelectedBoard] = useState<BoardType>(
-    kanbanBoards[0]
+    kanbanBoards[0],
   );
   const [loading, setLoading] = useState(true);
   const [lists, setLists] = useState<TrelloBoardContextProps["lists"]>([]);
@@ -135,6 +135,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isSuccessMessageOpen, setIsSuccessMessageOpen] = useState(false);
   const [isErrorMessageOpen, setIsErrorMessageOpen] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -144,12 +145,13 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         if (user) {
           setCurrentUser(user.id); // Set the user id if found
           if (user.email) setUserEmail(user.email); // Set the user email if found
-
+          setIsGuest(false);
         } else {
           console.log("No user found.");
         }
       } catch (error) {
         console.error("Error fetching user:", error);
+        setIsGuest(true);
       }
     };
 
@@ -157,8 +159,12 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       (_event, session) => {
         if (session) {
           fetchUser();
+        } else {
+          setCurrentUser(null);
+          setUserEmail(null);
+          setIsGuest(true);
         }
-      }
+      },
     );
 
     // Cleanup the listener on component unmount
@@ -172,23 +178,23 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
       if (isGuest) {
         // Load guest data from localStorage
         const storedUsername = JSON.parse(
-          localStorage.getItem("username") || '"Guest"'
+          localStorage.getItem("username") || '"Guest"',
         );
         const storedUserEmail = JSON.parse(
-          localStorage.getItem("userEmail") || '"youremail@mail.com"'
+          localStorage.getItem("userEmail") || '"youremail@mail.com"',
         );
         const storedProfileImage = JSON.parse(
-          localStorage.getItem("profileImage") || '"./blank-profile.png"'
+          localStorage.getItem("profileImage") || '"./blank-profile.png"',
         );
         const guestBoards = JSON.parse(
           localStorage.getItem("guestBoards") ||
-            '[{"userId": "user1", "id": "1", "title": "TRELLO BOARD", "emoji": "🐹"}]'
+            '[{"userId": "user1", "id": "1", "title": "TRELLO BOARD", "emoji": "🐹"}]',
         );
         const guestLists = JSON.parse(
-          localStorage.getItem("guestLists") || "[]"
+          localStorage.getItem("guestLists") || "[]",
         );
         const guestCards = JSON.parse(
-          localStorage.getItem("guestCards") || "[]"
+          localStorage.getItem("guestCards") || "[]",
         );
         setUsername(storedUsername);
         setUserEmail(storedUserEmail);
@@ -198,21 +204,22 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
         setLists(guestLists);
         setCards(guestCards);
         setLoading(false);
+        setHasLoaded(true);
       } else if (currentUser) {
         // Fetch data for logged-in users
         try {
           const storedUsername = JSON.parse(
-            localStorage.getItem("username") || '"Set Your Name"'
+            localStorage.getItem("username") || '"Set Your Name"',
           );
           const storedProfileImage = JSON.parse(
-            localStorage.getItem("profileImage") || '"./blank-profile.png"'
+            localStorage.getItem("profileImage") || '"./blank-profile.png"',
           );
           const [fetchedBoards, fetchedLists, fetchedCards] = await Promise.all(
             [
               fetchOrCreateBoards(currentUser),
               fetchLists(currentUser),
               fetchCards(currentUser),
-            ]
+            ],
           );
           setUsername(storedUsername);
           setProfileImage(storedProfileImage);
@@ -221,6 +228,8 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
           setLists(fetchedLists);
           setCards(fetchedCards);
           setLoading(false);
+          setLoading(false);
+          setHasLoaded(true);
         } catch (error) {
           console.error("Error fetching data:", error);
         }
@@ -238,14 +247,14 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
 
   // initialize guest data
   useEffect(() => {
-    if (isGuest) {
+    if (isGuest && hasLoaded) {
       saveGuestData();
     }
-  }, [kanbanBoards, lists, cards, isGuest]);
+  }, [kanbanBoards, lists, cards, isGuest, hasLoaded]);
 
   // Function to update a user's name
   const updateUsername = async (name: string): Promise<void> => {
-    if(!name.trim()) return;
+    if (!name.trim()) return;
     if (isGuest || currentUser) {
       if (name !== username) {
         localStorage.setItem("username", JSON.stringify(name));
@@ -255,14 +264,14 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   };
 
   const updateProfileImage = async (image: string): Promise<void> => {
-    if(!image.trim()) return;
+    if (!image.trim()) return;
     if (isGuest || currentUser) {
       if (image !== profileImage) {
         localStorage.setItem("profileImage", JSON.stringify(image));
         setProfileImage(image);
       }
     }
-  }
+  };
 
   // Function to create a new board
   const createBoard = async (): Promise<void> => {
@@ -315,7 +324,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
   const editBoard = async (
     id: Id,
     title: string,
-    emoji: string
+    emoji: string,
   ): Promise<void> => {
     if (!isGuest && !currentUser) return;
     if (currentUser && !isGuest) {
@@ -463,7 +472,7 @@ export const TrelloBoardProvider = ({ children }: PropsWithChildren) => {
               return { ...list, title }; // Update the title if the ID matches
             }
             return list; // Return the list unchanged if the ID does not match
-          })
+          }),
         );
       } catch (error) {
         console.error("error", error);

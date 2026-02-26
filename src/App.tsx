@@ -1,10 +1,15 @@
-import { BrowserRouter, useNavigate, useRoutes, useLocation } from "react-router-dom";
-import { TrelloBoardContext, TrelloBoardProvider } from "./Context";
+import {
+  BrowserRouter,
+  useNavigate,
+  useRoutes,
+  useLocation,
+} from "react-router-dom";
+import { TrelloBoardProvider } from "./Context";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/login";
 import { NotFound } from "./pages/NotFound";
 import { supabase } from "./supabase/client";
-import { useContext, useEffect } from "react";
+import { useEffect } from "react";
 import { SignUp } from "./pages/SignUp";
 import { ResetPassword } from "./pages/ResetPassword";
 import { UpdatePassword } from "./pages/UpdatePassword";
@@ -14,32 +19,28 @@ const AppRoutes = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const {isGuest} = useContext(TrelloBoardContext);
-
+  //const { isGuest } = useContext(TrelloBoardContext);
 
   useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange(( _event, session) => {
-      if (isGuest) {
-        navigate("/");
-      } else {
-        if (!session) {
-          // Allow unauthenticated users to access certain routes
-          if (!["/signin", "/signup", "/recover-password", "/account/update-password"].includes(location.pathname)) {
-            navigate("/signin");
-          }
-        } else {
-          // Authenticated users are redirected away from auth-related pages
-          if (["/signin", "/signup", "/recover-password"].includes(location.pathname)) {
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        // Si el usuario está logueado y está en páginas de auth → mandarlo al home
+        if (session) {
+          if (
+            ["/signin", "/signup", "/recover-password"].includes(
+              location.pathname,
+            )
+          ) {
             navigate("/");
           }
         }
-      }
-    });
+      },
+    );
 
     return () => {
       authListener.subscription.unsubscribe();
     };
-  }, [navigate, location.pathname, isGuest]);
+  }, [navigate, location.pathname]);
 
   const routes = useRoutes([
     { path: "/", element: <Home /> },
@@ -54,8 +55,6 @@ const AppRoutes = () => {
 };
 
 function App(): JSX.Element {
-  
-
   return (
     <>
       <BrowserRouter>
