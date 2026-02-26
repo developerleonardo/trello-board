@@ -9,6 +9,7 @@ import { FiLogOut, FiSidebar } from "react-icons/fi";
 import { LuChevronsUpDown } from "react-icons/lu";
 import { FaUser } from "react-icons/fa";
 import "./Sidebar.css";
+import { useNavigate } from "react-router-dom";
 
 const Sidebar = (): JSX.Element => {
   const {
@@ -27,6 +28,7 @@ const Sidebar = (): JSX.Element => {
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState<boolean>(false);
   const [isEditProfileModalOpen, setIsEditProfileModalOpen] =
     useState<boolean>(false);
+  const navigate = useNavigate();
 
   const getUser = async () => {
     const { data: user } = await supabase.auth.getUser();
@@ -46,6 +48,7 @@ const Sidebar = (): JSX.Element => {
     if (isGuest) {
       setIsGuest(false);
     }
+    navigate("/signin");
   };
 
   const filteredBoards = kanbanBoards.filter((board) => {

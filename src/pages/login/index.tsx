@@ -3,7 +3,7 @@ import { Layout } from "../../components/Layout";
 import { supabase } from "../../supabase/client";
 import { TrelloBoardContext } from "../../Context";
 import { v4 as uuid } from "uuid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage";
 import { MdEdit } from "react-icons/md";
 import { RxDragHandleDots2 } from "react-icons/rx";
@@ -22,6 +22,7 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,6 +57,7 @@ const Login = () => {
 
   const handleGuestLogin = () => {
     setIsGuest(true);
+    navigate("/");
     setKanbanBoards([
       {
         id: "1",
@@ -133,7 +135,7 @@ const Login = () => {
               className="button secondary-button"
               onClick={handleGuestLogin}
             >
-              Login as Guest
+              Continue as Guest
             </button>
           </form>
         </div>
@@ -199,9 +201,7 @@ const Login = () => {
                     Working on wireframes and mockups for the updated interface
                     design
                   </p>
-                  <span className="card-priority card-priority--low">
-                    Low
-                  </span>
+                  <span className="card-priority card-priority--low">Low</span>
                 </div>
               </div>
             </div>
